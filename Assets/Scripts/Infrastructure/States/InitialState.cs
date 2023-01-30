@@ -17,6 +17,7 @@ namespace Infrastructure.States
         public void Enter()
         {
             SpawnShip(); // здесь будем спавнить корабль и передавать его в качестве цели для врагов
+           // _stateMachine.Enter<GameBehaviourState>();
         }
 
         public void Exit()

@@ -18,7 +18,7 @@ namespace Infrastructure.States
         public void Enter()
         {
             //_sceneLoader.Load(Main); 
-            _stateMachine.Enter<InitialState>();
+            _stateMachine.Enter<GameBehaviourState>();
         }
 
         public void Exit()

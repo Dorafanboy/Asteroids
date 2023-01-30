@@ -21,6 +21,7 @@ namespace Infrastructure.States
             {
                 [typeof(BootstrapState)] = new BootstrapState(this, _diContainer, sceneLoader, updatable),
                 [typeof(LoadLevelState)] = new LoadLevelState(this, sceneLoader),
+                [typeof(GameBehaviourState)] = new GameBehaviourState(this),
                 [typeof(InitialState)] = new InitialState(this, _diContainer.GetService<IFactory>())
             };
         }

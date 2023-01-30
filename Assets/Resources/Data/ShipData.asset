@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f6abc4734afb6b438c658cf791f8323, type: 3}
   m_Name: ShipData
   m_EditorClassIdentifier: 
-  _acceleration: 0
-  _deceleration: 0
-  _maxSpeed: 0
+  _acceleration: 1.5
+  _deceleration: 0.5
+  _maxSpeed: 10
   _rotationSpeed: 50
   _shotCooldown: 0
   _maxAmmo: 3

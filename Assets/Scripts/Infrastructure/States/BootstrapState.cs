@@ -1,4 +1,5 @@
-﻿using Infrastructure.Loaders;
+﻿using Infrastructure;
+using Infrastructure.Loaders;
 using Infrastructure.Services;
 using Infrastructure.Services.Assets;
 using Infrastructure.Services.Factories;
@@ -39,10 +40,13 @@ namespace Infrastructure.States
         private void RegisterServices()
         {
             _diContainer.Register<IAssetProvider>(new AssetProvider());
-            _diContainer.Register<IFactory>(new Factory(_diContainer.GetService<IAssetProvider>(), _updatable, 
-                _diContainer.GetService<IInputService>()));
             _diContainer.Register<IInputService>(new InputService(_updatable));
-        }
+            _diContainer.Register<IFactory>(new Factory(_diContainer.GetService<IAssetProvider>(), 
+                _updatable, _diContainer.GetService<IInputService>()));
+            // передать container и в нем получить все iUpdatelistener и доабвить в лист какойто мб,
+            // и когда игра стартует
+            //enable когда завершается игру то disable
+         }
 
         private void OnSceneLoaded()
         {
