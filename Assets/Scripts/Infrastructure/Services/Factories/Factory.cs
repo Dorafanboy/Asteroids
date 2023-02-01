@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Infrastructure.Services.Assets;
 using Infrastructure.Services.Inputs;
+using Infrastructure.Wrapper;
 using ShipContent;
 
 namespace Infrastructure.Services.Factories
@@ -29,7 +30,17 @@ namespace Infrastructure.Services.Factories
             var shipView = new ShipView(ship, _inputService);
             var shipPresenter = new ShipPresenter(ship, shipView);
             
+            
+            
             return ship;
+        }
+
+        public ScreenWrapper CreateWrapper(Ship ship)
+        {
+            var wrapper = new ScreenWrapper(_updatable, ship);
+            wrapper.Enable();
+
+            return wrapper;
         }
     }
 }
