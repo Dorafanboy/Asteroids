@@ -5,7 +5,7 @@ namespace Infrastructure.Services.Assets
 {
     public class AssetProvider : IAssetProvider
     {
-        public ShipStaticData GetShipData(string path, Vector3 position)
+        public ShipStaticData GetShipData(string path)
         {
             var shipData = Resources.Load<ShipStaticData>(path);
 

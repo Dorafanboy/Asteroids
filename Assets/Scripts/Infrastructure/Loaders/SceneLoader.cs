@@ -18,8 +18,14 @@ namespace Infrastructure.Loaders
             _coroutineRunner.StartCoroutine(LoadScene(name, onLoaded));
         }
 
-        private IEnumerator LoadScene(string name, Action onLoaded)
+        private IEnumerator LoadScene(string name, Action onLoaded = null)
         {
+            if (SceneManager.GetActiveScene().name == name)
+            {
+                onLoaded?.Invoke();
+                yield break;
+            }
+            
             var waitNextScene = SceneManager.LoadSceneAsync(name);
 
             if (waitNextScene.isDone == false)

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
 
 namespace Infrastructure.States
 {
@@ -19,7 +17,6 @@ namespace Infrastructure.States
         public void Enter()
         {
             //EnableUpdateListeners();
-            _stateMachine.Enter<InitialState>();
 
             //ChangeStateUpdateListeners(_updateListeners.Select(x => x).First().Enable);
         }

@@ -1,11 +1,11 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Infrastructure.Services.Inputs
 {
     public interface IInputService : IService
     {
-        event Action<float> RotateKeyDowned;
-        event Action<bool, float> MoveKeyDowned;
-        event Action<float> MoveKeyUpped;
+        event Action<Vector2, float> MoveKeyDowned;
+        event Action<float, float> RotateKeyDowned;
     }
 }

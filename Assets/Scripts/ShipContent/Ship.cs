@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Infrastructure.Services.Inputs;
+using UnityEngine;
 
 namespace ShipContent
 {
@@ -6,14 +7,15 @@ namespace ShipContent
     {
         private float _shotCooldown;
         private int _maxAmmo;
-
         public float MaxSpeed { get; }
         public float Deceleration { get;  }
         public float Acceleration { get; }
         public float RotationSpeed { get; }
         public GameObject Prefab { get; }
+        public IInputService InputService { get; }
 
-        public Ship(float acceleration, float deceleration, float maxSpeed, float rotationSpeed, float shotCooldown, int maxAmmo, GameObject prefab)
+        public Ship(float acceleration, float deceleration, float maxSpeed, float rotationSpeed, 
+            float shotCooldown, int maxAmmo, GameObject prefab, IInputService inputService)
         {
             Acceleration = acceleration;
             Deceleration = deceleration;
@@ -22,6 +24,7 @@ namespace ShipContent
             _shotCooldown = shotCooldown;
             _maxAmmo = maxAmmo;
             Prefab = prefab;
+            InputService = inputService;
         }
     }
 }

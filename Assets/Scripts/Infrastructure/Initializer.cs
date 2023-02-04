@@ -1,6 +1,4 @@
 ﻿using System;
-using Infrastructure.Loaders;
-using Infrastructure.States;
 using UnityEngine;
 
 namespace Infrastructure
@@ -11,11 +9,9 @@ namespace Infrastructure
         
         private void Awake()
         {
-            DontDestroyOnLoad(this);
-            var sceneLoader = new SceneLoader(this);
-            var stateMachine = new StateMachine(sceneLoader,this, this);
+            var game = new Game(this, this);
             
-            stateMachine.Enter<BootstrapState>();
+            DontDestroyOnLoad(this);
         }
 
         private void Update()

@@ -21,16 +21,14 @@ namespace Infrastructure.Services.Factories
 
         public Ship CreateShip()
         {
-            var shipData = _assetProvider.GetShipData(AssetPath.ShipPath, Vector3.zero);
+            var shipData = _assetProvider.GetShipData(AssetPath.ShipPath);
             var shipPrefab = Object.Instantiate(shipData.Prefab, Vector3.zero, Quaternion.identity);
             
             var ship = new Ship(shipData.Acceleration, shipData.Deceleration, shipData.MaxSpeed, 
-                shipData.RotationSpeed, shipData.ShotCooldown, shipData.MaxAmmo, shipPrefab);
-
-            var shipView = new ShipView(ship, _inputService);
+                shipData.RotationSpeed, shipData.ShotCooldown, shipData.MaxAmmo, shipPrefab, _inputService);
+            
+            var shipView = new ShipView(ship);
             var shipPresenter = new ShipPresenter(ship, shipView);
-            
-            
             
             return ship;
         }

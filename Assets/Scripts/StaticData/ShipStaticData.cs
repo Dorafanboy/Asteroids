@@ -10,7 +10,6 @@ namespace StaticData
         [SerializeField] private float _maxSpeed;
         [SerializeField] private float _rotationSpeed;
         [SerializeField] private float _shotCooldown;
-        
         [Range(0, 3)]
         [SerializeField] private int _maxAmmo;
         [SerializeField] private GameObject _prefab;

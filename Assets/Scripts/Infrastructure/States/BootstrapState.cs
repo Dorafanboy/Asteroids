@@ -1,7 +1,7 @@
-﻿using Infrastructure;
+﻿using Constants;
 using Infrastructure.Loaders;
-using Infrastructure.Services;
 using Infrastructure.Services.Assets;
+using Infrastructure.Services.Containers;
 using Infrastructure.Services.Factories;
 using Infrastructure.Services.Inputs;
 
@@ -9,8 +9,6 @@ namespace Infrastructure.States
 {
     public class BootstrapState : IState
     {
-        private const string Main = "Main";
-        
         private readonly IStateMachine _stateMachine;
         private readonly IDiContainer _diContainer;
         private readonly ISceneLoader _sceneLoader;
@@ -28,29 +26,24 @@ namespace Infrastructure.States
 
         public void Enter()
         {
-            _stateMachine.Enter<LoadLevelState>();
-            //_sceneLoader.Load(Main);
+            _sceneLoader.Load(Constant.Initial, OnSceneLoaded);
         }
 
         public void Exit()
         {
-            
         }
 
         private void RegisterServices()
         {
             _diContainer.Register<IAssetProvider>(new AssetProvider());
-            _diContainer.Register<IInputService>(new InputService(_updatable));
+            _diContainer.Register<IInputService>(new InputService(_updatable, new PlayerInput()));
             _diContainer.Register<IFactory>(new Factory(_diContainer.GetService<IAssetProvider>(), 
                 _updatable, _diContainer.GetService<IInputService>()));
-            // передать container и в нем получить все iUpdatelistener и доабвить в лист какойто мб,
-            // и когда игра стартует
-            //enable когда завершается игру то disable
-         }
+        }
 
         private void OnSceneLoaded()
         {
-            //_stateMachine.Enter<LoadLevelState>();
+            _stateMachine.Enter<LoadLevelState>();
         }
     }
 }

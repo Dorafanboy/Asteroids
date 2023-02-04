@@ -1,11 +1,7 @@
-﻿using Infrastructure.Services;
-
-namespace Infrastructure
+﻿namespace Infrastructure
 {
-    public interface IUpdateListener
+    public interface IUpdateListener : IEventListener
     {
-        void Enable();
-        void Disable();
         void OnUpdated(float time);
     }
 }

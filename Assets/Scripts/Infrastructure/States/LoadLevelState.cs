@@ -1,11 +1,10 @@
-﻿using Infrastructure.Loaders;
+﻿using Constants;
+using Infrastructure.Loaders;
 
 namespace Infrastructure.States
 {
     public class LoadLevelState : IState
     {
-        private const string Main = "Main";
-        
         private readonly IStateMachine _stateMachine;
         private readonly ISceneLoader _sceneLoader;
 
@@ -17,13 +16,16 @@ namespace Infrastructure.States
 
         public void Enter()
         {
-            //_sceneLoader.Load(Main); 
-            _stateMachine.Enter<GameBehaviourState>();
+            _sceneLoader.Load(Constant.Main, OnSceneLoaded); 
         }
 
         public void Exit()
         {
-            
+        }
+        
+        private void OnSceneLoaded()
+        {
+            _stateMachine.Enter<InitialState>();
         }
     }
 }

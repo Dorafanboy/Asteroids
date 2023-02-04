@@ -1,5 +1,4 @@
-﻿using System;
-using Infrastructure.Services.Factories;
+﻿using Infrastructure.Services.Factories;
 using Infrastructure.Wrapper;
 using ShipContent;
 
@@ -18,14 +17,14 @@ namespace Infrastructure.States
 
         public void Enter()
         {
-            var ship = SpawnShip(); // здесь будем спавнить корабль и передавать его в качестве цели для врагов
+            var ship = SpawnShip(); 
             var wrapper = CreateWrapper(ship);
-            // _stateMachine.Enter<GameBehaviourState>();
+            
+            _stateMachine.Enter<GameBehaviourState>();
         }
 
         public void Exit()
         {
-            
         }
 
         private Ship SpawnShip()
