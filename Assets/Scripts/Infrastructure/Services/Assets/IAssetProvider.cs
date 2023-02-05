@@ -1,9 +1,9 @@
-﻿using StaticData;
+﻿using UnityEngine;
 
 namespace Infrastructure.Services.Assets
 {
     public interface IAssetProvider : IService
     {
-        ShipStaticData GetShipData(string path);
+        T GetData<T>(string path) where T : ScriptableObject;
     }
 }

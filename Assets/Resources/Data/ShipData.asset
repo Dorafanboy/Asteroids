@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f6abc4734afb6b438c658cf791f8323, type: 3}
   m_Name: ShipData
   m_EditorClassIdentifier: 
-  _acceleration: 2
-  _deceleration: 0.5
-  _maxSpeed: 10
-  _rotationSpeed: 200
+  _acceleration: 0.02
+  _deceleration: 0.015
+  _maxSpeed: 0.25
+  _rotationSpeed: 300
   _shotCooldown: 0
   _maxAmmo: 3
   _prefab: {fileID: 6728366472572728694, guid: a7c1c26e665d1904e9b30fc696a5c0d9, type: 3}

@@ -7,6 +7,7 @@ namespace Infrastructure.Services.Inputs
     {
         public event Action<Vector2, float> MoveKeyDowned;
         public event Action<float, float> RotateKeyDowned;
+        public event Action ShootKeyDowned;
 
         private readonly IUpdatable _updatable;
         private readonly PlayerInput _playerInput;
@@ -15,6 +16,8 @@ namespace Infrastructure.Services.Inputs
         {
             _updatable = updatable;
             _playerInput = playerInput;
+            
+            _playerInput.Gameplay.Shoot.performed += ctx => OnShoot();
             
             Enable();
         }
@@ -37,6 +40,11 @@ namespace Infrastructure.Services.Inputs
 
             MoveKeyDowned?.Invoke(move, time);
             RotateKeyDowned?.Invoke(rotate, time);
+        }
+
+        private void OnShoot()
+        {
+            ShootKeyDowned?.Invoke();
         }
     }
 }

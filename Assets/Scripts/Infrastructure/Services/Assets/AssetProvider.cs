@@ -1,15 +1,14 @@
-﻿using StaticData;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Infrastructure.Services.Assets
 {
     public class AssetProvider : IAssetProvider
     {
-        public ShipStaticData GetShipData(string path)
+        public T GetData<T>(string path) where T : ScriptableObject
         {
-            var shipData = Resources.Load<ShipStaticData>(path);
+            var data = Resources.Load<T>(path);
 
-            return shipData;
+            return data;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Infrastructure.Services.Inputs;
+﻿using Guns;
+using Infrastructure.Services.Inputs;
 using UnityEngine;
 
 namespace ShipContent
@@ -13,9 +14,11 @@ namespace ShipContent
         public float RotationSpeed { get; }
         public GameObject Prefab { get; }
         public IInputService InputService { get; }
+        public float CurrentSpeed { get; set; }
+        public IWeapon Weapon { get;}
 
         public Ship(float acceleration, float deceleration, float maxSpeed, float rotationSpeed, 
-            float shotCooldown, int maxAmmo, GameObject prefab, IInputService inputService)
+            float shotCooldown, int maxAmmo, GameObject prefab, IInputService inputService, IWeapon weapon)
         {
             Acceleration = acceleration;
             Deceleration = deceleration;
@@ -25,6 +28,7 @@ namespace ShipContent
             _maxAmmo = maxAmmo;
             Prefab = prefab;
             InputService = inputService;
+            Weapon = weapon;
         }
     }
 }

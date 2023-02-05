@@ -7,5 +7,6 @@ namespace Infrastructure.Services.Inputs
     {
         event Action<Vector2, float> MoveKeyDowned;
         event Action<float, float> RotateKeyDowned;
+        event Action ShootKeyDowned;
     }
 }

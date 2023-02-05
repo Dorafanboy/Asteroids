@@ -1,5 +1,7 @@
-﻿using Infrastructure.Wrapper;
+﻿using Guns;
+using Infrastructure.Wrapper;
 using ShipContent;
+using UnityEngine;
 
 namespace Infrastructure.Services.Factories
 {
@@ -7,5 +9,6 @@ namespace Infrastructure.Services.Factories
     {
         Ship CreateShip();
         ScreenWrapper CreateWrapper(Ship ship);
+        Projectile CreateProjectile(Vector3 position, Quaternion angle, GunType gunType);
     }
 }
