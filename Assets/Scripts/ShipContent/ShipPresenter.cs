@@ -50,6 +50,7 @@ namespace ShipContent
         private void OnShootKeyDowned()
         {
             var angle = Quaternion.Euler(0, 0, _ship.Prefab.transform.eulerAngles.z);
+            
             _ship.Weapon.Shoot(_ship.Prefab.transform.position, angle);
         }
     }

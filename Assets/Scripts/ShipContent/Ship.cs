@@ -15,7 +15,7 @@ namespace ShipContent
         public GameObject Prefab { get; }
         public IInputService InputService { get; }
         public float CurrentSpeed { get; set; }
-        public IWeapon Weapon { get;}
+        public IWeapon Weapon { get; }
 
         public Ship(float acceleration, float deceleration, float maxSpeed, float rotationSpeed, 
             float shotCooldown, int maxAmmo, GameObject prefab, IInputService inputService, IWeapon weapon)

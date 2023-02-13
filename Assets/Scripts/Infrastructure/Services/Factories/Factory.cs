@@ -1,4 +1,5 @@
-﻿using Guns;
+﻿using System.Collections.Generic;
+using Guns;
 using UnityEngine;
 using Infrastructure.Services.Assets;
 using Infrastructure.Services.Inputs;
@@ -26,8 +27,7 @@ namespace Infrastructure.Services.Factories
             var shipData = _assetProvider.GetData<ShipStaticData>(AssetPath.ShipPath);
             var shipPrefab = Object.Instantiate(shipData.Prefab, Vector3.zero, Quaternion.identity);
 
-            var bulletData = _assetProvider.GetData<BulletStaticData>(AssetPath.BulletPath);
-            var weapon = new Weapon(this, bulletData.GunType);
+            var weapon = CreateWeapon(CreateProjectile().Type, AssetPath.BulletPath, AssetPath.PoolPath);
             
             var ship = new Ship(shipData.Acceleration, shipData.Deceleration, shipData.MaxSpeed, 
                 shipData.RotationSpeed, shipData.ShotCooldown, shipData.MaxAmmo, shipPrefab, _inputService, weapon);
@@ -46,14 +46,35 @@ namespace Infrastructure.Services.Factories
             return wrapper;
         }
 
-        public Projectile CreateProjectile(Vector3 position, Quaternion angle, GunType gunType)
+        public IWeapon CreateWeapon(GunType gunType, string bulletPath, string poolPath)
+        {
+            var poolData = _assetProvider.GetData<PoolStaticData>(poolPath);
+            var pool = new ObjectPool<Projectile>(poolData.PoolSize, CreateQueue);
+
+            var weapon = new Weapon(gunType, pool);
+
+            var screen = new BulletScreenWrapper(_updatable, pool, weapon);
+
+            return weapon;
+        }
+
+        private Projectile CreateProjectile()
         {
             var bulletData = _assetProvider.GetData<BulletStaticData>(AssetPath.BulletPath);
-            var bulletPrefab = Object.Instantiate(bulletData.Prefab, position, angle);
+            
+            var bulletPrefab = Object.Instantiate(bulletData.Prefab);
+            bulletPrefab.SetActive(false);
 
-            var bullet = new Projectile(bulletPrefab, gunType, bulletData.Deceleration);
+            var bullet = new Projectile(bulletPrefab, bulletData.GunType, bulletData.Deceleration, _updatable);
             var bulletView = new ProjectileView();
             var bulletPresenter = new ProjectilePresenter(bullet, bulletView, _updatable);
+
+            return bullet;
+        }
+
+        private Projectile CreateQueue() 
+        {
+            var bullet = CreateProjectile();
 
             return bullet;
         }

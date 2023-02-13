@@ -1,22 +1,31 @@
-﻿using Infrastructure.Services.Factories;
+﻿using System;
 using UnityEngine;
 
 namespace Guns
 {
     public class Weapon : IWeapon
     {
-        public IFactory Factory { get; }
         public GunType GunType { get; }
+        
+        private readonly ObjectPool<Projectile> _objectPool;
+        
+        public event Action<Projectile> Shooted;
 
-        public Weapon(IFactory factory, GunType gunType)
+        public Weapon(GunType gunType, ObjectPool<Projectile> objectPool)
         {
-            Factory = factory;
             GunType = gunType;
+            _objectPool = objectPool;
         }
 
         public void Shoot(Vector3 position, Quaternion angle)
         {
-            Factory.CreateProjectile(position, angle, GunType);
+            var bullet = _objectPool.GetObject();
+
+            bullet.Prefab.transform.position = position;
+            bullet.Prefab.transform.eulerAngles = angle.eulerAngles;
+            bullet.Prefab.SetActive(true);
+            
+            Shooted?.Invoke(bullet);
         }
     }
 }
