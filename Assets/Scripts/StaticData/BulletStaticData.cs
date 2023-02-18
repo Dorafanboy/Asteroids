@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace StaticData
 {
-    [CreateAssetMenu(fileName = "BulletData", menuName = "NewData/BulletData")]
+    [CreateAssetMenu(fileName = "BulletData", menuName = "New Data/BulletData")]
     public class BulletStaticData : ScriptableObject
     {
         [SerializeField] private GunType _gunType;

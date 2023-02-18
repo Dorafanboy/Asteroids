@@ -2,7 +2,7 @@
 
 namespace StaticData
 {
-    [CreateAssetMenu(fileName = "PoolData", menuName = "NewData/PoolData")]
+    [CreateAssetMenu(fileName = "PoolData", menuName = "New Data/PoolData")]
     public class PoolStaticData : ScriptableObject
     {
         [SerializeField] private int _poolSize;

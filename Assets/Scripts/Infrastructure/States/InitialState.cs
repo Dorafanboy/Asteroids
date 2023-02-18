@@ -1,4 +1,5 @@
-﻿using Infrastructure.Services.Factories;
+﻿using Guns;
+using Infrastructure.Services.Factories;
 using Infrastructure.Wrapper;
 using ShipContent;
 
@@ -15,21 +16,23 @@ namespace Infrastructure.States
             _factory = factory;
         }
 
-        public void Enter()
+        public void Enter() // сделать дженерик enter'a принимающий гантайп
         {
-            var ship = SpawnShip(); 
+            var firstWeapon = _factory.CreateWeapon<Bullet>(GunType.Projectile);
+            var secondWeapon = _factory.CreateWeapon<Bullet>(GunType.Laser); 
+            var ship = SpawnShip(firstWeapon, secondWeapon); 
             var wrapper = CreateWrapper(ship);
             
             _stateMachine.Enter<GameBehaviourState>();
         }
 
-        public void Exit()
+        private Ship SpawnShip<T, TT>(T firstWeapon, TT secondWeapon) where T : IWeapon<Bullet> where TT : IWeapon<Bullet>
         {
+            return _factory.CreateShip(firstWeapon, secondWeapon);
         }
 
-        private Ship SpawnShip()
+        public void Exit()
         {
-            return _factory.CreateShip();
         }
 
         private ScreenWrapper CreateWrapper(Ship ship)

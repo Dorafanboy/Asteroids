@@ -51,7 +51,8 @@ namespace ShipContent
         {
             var angle = Quaternion.Euler(0, 0, _ship.Prefab.transform.eulerAngles.z);
             
-            _ship.Weapon.Shoot(_ship.Prefab.transform.position, angle);
+            _ship.FirstWeapon.Shoot(_ship.Prefab.transform.position, angle);
+            //_ship.SecondWeapon.Shoot(_ship.Prefab.transform.position, angle);
         }
     }
 }

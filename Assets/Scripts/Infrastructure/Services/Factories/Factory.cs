@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using Guns;
+﻿using Guns;
 using UnityEngine;
 using Infrastructure.Services.Assets;
 using Infrastructure.Services.Inputs;
 using Infrastructure.Wrapper;
 using ShipContent;
 using StaticData;
+using Bullet = Guns.Bullet;
 
 namespace Infrastructure.Services.Factories
 {
@@ -22,16 +22,15 @@ namespace Infrastructure.Services.Factories
             _inputService = inputService;
         }
 
-        public Ship CreateShip()
+        public Ship CreateShip<T, TT>(T firstWeapon, TT secondWeapon) where T : IWeapon<Bullet> where TT : IWeapon<Bullet>
         {
             var shipData = _assetProvider.GetData<ShipStaticData>(AssetPath.ShipPath);
             var shipPrefab = Object.Instantiate(shipData.Prefab, Vector3.zero, Quaternion.identity);
 
-            var weapon = CreateWeapon(CreateProjectile().Type, AssetPath.BulletPath, AssetPath.PoolPath);
-            
             var ship = new Ship(shipData.Acceleration, shipData.Deceleration, shipData.MaxSpeed, 
-                shipData.RotationSpeed, shipData.ShotCooldown, shipData.MaxAmmo, shipPrefab, _inputService, weapon);
-            
+                shipData.RotationSpeed, shipData.ShotCooldown, shipData.MaxAmmo, shipPrefab,
+                _inputService, firstWeapon, secondWeapon);
+
             var shipView = new ShipView(ship);
             var shipPresenter = new ShipPresenter(ship, shipView);
             
@@ -43,38 +42,43 @@ namespace Infrastructure.Services.Factories
             var wrapper = new ScreenWrapper(_updatable, ship);
             wrapper.Enable();
 
-            return wrapper;
+            return wrapper; 
         }
 
-        public IWeapon CreateWeapon(GunType gunType, string bulletPath, string poolPath)
+        public IWeapon<T> CreateWeapon<T>(GunType gunType) where T : Bullet
         {
-            var poolData = _assetProvider.GetData<PoolStaticData>(poolPath);
-            var pool = new ObjectPool<Projectile>(poolData.PoolSize, CreateQueue);
-
-            var weapon = new Weapon(gunType, pool);
-
-            var screen = new BulletScreenWrapper(_updatable, pool, weapon);
-
-            return weapon;
+            var weapon = new Weapon<T>(CreateBullet<T>, _updatable, gunType);
+            
+            return weapon;  
         }
-
-        private Projectile CreateProjectile()
+        
+        private T CreateBullet<T>(GunType gunType) where T : Bullet 
         {
-            var bulletData = _assetProvider.GetData<BulletStaticData>(AssetPath.BulletPath);
+            var bulletData = gunType == GunType.Projectile
+                ? _assetProvider.GetData<BulletStaticData>(AssetPath.Projectile)
+                : _assetProvider.GetData<BulletStaticData>(AssetPath.Laser);
             
             var bulletPrefab = Object.Instantiate(bulletData.Prefab);
-            bulletPrefab.SetActive(false);
-
-            var bullet = new Projectile(bulletPrefab, bulletData.GunType, bulletData.Deceleration, _updatable);
+            
+            var bullet = new Bullet(bulletData.Deceleration, _updatable, bulletPrefab, bulletData.GunType);
             var bulletView = new ProjectileView();
             var bulletPresenter = new ProjectilePresenter(bullet, bulletView, _updatable);
 
-            return bullet;
+            return bullet as T;
         }
 
-        private Projectile CreateQueue() 
+        public Bullet CreateBullet(IWeapon<Bullet> weapon)
         {
-            var bullet = CreateProjectile();
+            var bulletData = weapon.GetBulletType() == typeof(Projectile)
+                ? _assetProvider.GetData<BulletStaticData>(AssetPath.Projectile)
+                : _assetProvider.GetData<BulletStaticData>(AssetPath.Laser);
+            
+            var bulletPrefab = Object.Instantiate(bulletData.Prefab);
+            bulletPrefab.SetActive(false);
+            
+            var bullet = new Bullet(bulletData.Deceleration, _updatable, bulletPrefab, bulletData.GunType);
+            var bulletView = new ProjectileView();
+            var bulletPresenter = new ProjectilePresenter(bullet, bulletView, _updatable);
 
             return bullet;
         }

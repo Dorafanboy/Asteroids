@@ -5,13 +5,13 @@ namespace Guns
 {
     public class ProjectilePresenter : IUpdateListener
     {
-        private readonly Projectile _projectile;
+        private readonly Bullet _bullet;
         private readonly ProjectileView _view;
         private readonly IUpdatable _updatable;
 
-        public ProjectilePresenter(Projectile projectile, ProjectileView view, IUpdatable updatable)
+        public ProjectilePresenter(Bullet bullet, ProjectileView view, IUpdatable updatable)
         {
-            _projectile = projectile;
+            _bullet = bullet;
             _view = view;
             _updatable = updatable;
             

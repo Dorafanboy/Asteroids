@@ -2,7 +2,7 @@
 {
     public enum GunType
     {
-        Bullet = 0,
+        Projectile = 0,
         Laser = 1
     };
 }

@@ -1,21 +1,22 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Guns;
 using UnityEngine;
 
 namespace Infrastructure.Wrapper
 {
-    public class BulletScreenWrapper : IUpdateListener
+    public class BulletScreenWrapper<T> : IUpdateListener where T : Bullet
     {
         private readonly IUpdatable _updatable;
-        private readonly Queue<Projectile> _projectiles;
-        private readonly ObjectPool<Projectile> _objectPool;
+        private readonly List<T> _projectiles;
+        private readonly ObjectPool<T> _objectPool;
         private readonly Camera _camera;
-        private readonly Weapon _weapon;
+        private readonly Weapon<T> _weapon;
 
-        public BulletScreenWrapper(IUpdatable updatable, ObjectPool<Projectile> objectPool, Weapon weapon)
+        public BulletScreenWrapper(IUpdatable updatable, ObjectPool<T> objectPool, Weapon<T> weapon)
         {
             _updatable = updatable;
-            _projectiles = new Queue<Projectile>();
+            _projectiles = new List<T>();
             _objectPool = objectPool;
             _weapon = weapon;
             _camera = Camera.main;
@@ -42,29 +43,31 @@ namespace Infrastructure.Wrapper
                 return;
             }
             
-            foreach (var proj in _projectiles)
+            foreach (var proj in _projectiles.ToList())
             {
-                GetWrapPosition(proj);
+                if (IsNeedReturn(proj))
+                {
+                    proj.Prefab.SetActive(false);
+                
+                    _objectPool.ReturnObject(proj);
+                
+                    _projectiles.Remove(proj);
+                }
             }
         }
 
-        private void GetWrapPosition(Projectile projectile)
+        private bool IsNeedReturn(Bullet bullet)
         {
-            var position = projectile.Prefab.transform.position;
+            var position = bullet.Prefab.transform.position;
             var viewportPosition = _camera.WorldToViewportPoint(position);
             
-            if (viewportPosition.x > 1 || viewportPosition.x < 0 || 
-                viewportPosition.y < 0 || viewportPosition.y > 1)
-            {
-                projectile.Prefab.SetActive(false);
-                
-                _objectPool.ReturnObject(projectile);
-            }
+            return (viewportPosition.x > 1 || viewportPosition.x < 0 || 
+                viewportPosition.y < 0 || viewportPosition.y > 1);
         }
 
-        private void OnShooted(Projectile projectile)
+        private void OnShooted(Bullet bullet)
         {
-            _projectiles.Enqueue(projectile);
+            _projectiles.Add((T)bullet);
         }
     }
 }
