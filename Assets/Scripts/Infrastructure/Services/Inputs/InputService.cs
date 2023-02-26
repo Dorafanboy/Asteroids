@@ -7,7 +7,8 @@ namespace Infrastructure.Services.Inputs
     {
         public event Action<Vector2, float> MoveKeyDowned;
         public event Action<float, float> RotateKeyDowned;
-        public event Action ShootKeyDowned;
+        public event Action FirstWeaponFired;
+        public event Action SecondWeaponFired;
 
         private readonly IUpdatable _updatable;
         private readonly PlayerInput _playerInput;
@@ -17,11 +18,12 @@ namespace Infrastructure.Services.Inputs
             _updatable = updatable;
             _playerInput = playerInput;
             
-            _playerInput.Gameplay.Shoot.performed += ctx => OnShoot();
+            _playerInput.Gameplay.FirstWeaponShoot.performed += ctx => OnFirstWeaponShoot();
+            _playerInput.Gameplay.SecondWeaponShoot.performed += ctx => OnSecondWeaponShoot();
             
             Enable();
         }
-        
+
         public void Enable()
         {
             _updatable.Updated += OnUpdated;
@@ -42,9 +44,14 @@ namespace Infrastructure.Services.Inputs
             RotateKeyDowned?.Invoke(rotate, time);
         }
 
-        private void OnShoot()
+        private void OnFirstWeaponShoot()
         {
-            ShootKeyDowned?.Invoke();
+            FirstWeaponFired?.Invoke();
+        }
+
+        private void OnSecondWeaponShoot()
+        {
+            SecondWeaponFired?.Invoke();
         }
     }
 }

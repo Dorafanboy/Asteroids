@@ -46,9 +46,18 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Shoot"",
+                    ""name"": ""FirstWeaponShoot"",
                     ""type"": ""Button"",
                     ""id"": ""ea129106-36fd-4f8b-88d8-d8dfff2ac18e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SecondWeaponShoot"",
+                    ""type"": ""Button"",
+                    ""id"": ""f283f364-b30d-4896-ac6e-227a26b3f25d"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -118,29 +127,40 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Shoot"",
+                    ""action"": ""FirstWeaponShoot"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""negative"",
+                    ""name"": ""positive"",
                     ""id"": ""d85db740-6e35-49c8-8388-ce58683d4c69"",
                     ""path"": ""<Keyboard>/f"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Shoot"",
+                    ""action"": ""FirstWeaponShoot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
                 {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""6e7a23f4-f5b1-49d5-b18f-cb5c922c0b6b"",
+                    ""path"": ""1DAxis(whichSideWins=1)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SecondWeaponShoot"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
                     ""name"": ""positive"",
-                    ""id"": ""e785985f-7dcb-4e3c-86f4-e7b4c9f3ac8a"",
+                    ""id"": ""1e23c67c-4f43-4b61-90c8-b94745f74b85"",
                     ""path"": ""<Keyboard>/g"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Shoot"",
+                    ""action"": ""SecondWeaponShoot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 }
@@ -153,7 +173,8 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         m_Gameplay = asset.FindActionMap("Gameplay", throwIfNotFound: true);
         m_Gameplay_Movement = m_Gameplay.FindAction("Movement", throwIfNotFound: true);
         m_Gameplay_Rotate = m_Gameplay.FindAction("Rotate", throwIfNotFound: true);
-        m_Gameplay_Shoot = m_Gameplay.FindAction("Shoot", throwIfNotFound: true);
+        m_Gameplay_FirstWeaponShoot = m_Gameplay.FindAction("FirstWeaponShoot", throwIfNotFound: true);
+        m_Gameplay_SecondWeaponShoot = m_Gameplay.FindAction("SecondWeaponShoot", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -215,14 +236,16 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private IGameplayActions m_GameplayActionsCallbackInterface;
     private readonly InputAction m_Gameplay_Movement;
     private readonly InputAction m_Gameplay_Rotate;
-    private readonly InputAction m_Gameplay_Shoot;
+    private readonly InputAction m_Gameplay_FirstWeaponShoot;
+    private readonly InputAction m_Gameplay_SecondWeaponShoot;
     public struct GameplayActions
     {
         private @PlayerInput m_Wrapper;
         public GameplayActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Movement => m_Wrapper.m_Gameplay_Movement;
         public InputAction @Rotate => m_Wrapper.m_Gameplay_Rotate;
-        public InputAction @Shoot => m_Wrapper.m_Gameplay_Shoot;
+        public InputAction @FirstWeaponShoot => m_Wrapper.m_Gameplay_FirstWeaponShoot;
+        public InputAction @SecondWeaponShoot => m_Wrapper.m_Gameplay_SecondWeaponShoot;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -238,9 +261,12 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Rotate.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRotate;
                 @Rotate.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRotate;
                 @Rotate.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRotate;
-                @Shoot.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnShoot;
-                @Shoot.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnShoot;
-                @Shoot.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnShoot;
+                @FirstWeaponShoot.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnFirstWeaponShoot;
+                @FirstWeaponShoot.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnFirstWeaponShoot;
+                @FirstWeaponShoot.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnFirstWeaponShoot;
+                @SecondWeaponShoot.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnSecondWeaponShoot;
+                @SecondWeaponShoot.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnSecondWeaponShoot;
+                @SecondWeaponShoot.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnSecondWeaponShoot;
             }
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -251,9 +277,12 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Rotate.started += instance.OnRotate;
                 @Rotate.performed += instance.OnRotate;
                 @Rotate.canceled += instance.OnRotate;
-                @Shoot.started += instance.OnShoot;
-                @Shoot.performed += instance.OnShoot;
-                @Shoot.canceled += instance.OnShoot;
+                @FirstWeaponShoot.started += instance.OnFirstWeaponShoot;
+                @FirstWeaponShoot.performed += instance.OnFirstWeaponShoot;
+                @FirstWeaponShoot.canceled += instance.OnFirstWeaponShoot;
+                @SecondWeaponShoot.started += instance.OnSecondWeaponShoot;
+                @SecondWeaponShoot.performed += instance.OnSecondWeaponShoot;
+                @SecondWeaponShoot.canceled += instance.OnSecondWeaponShoot;
             }
         }
     }
@@ -262,6 +291,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     {
         void OnMovement(InputAction.CallbackContext context);
         void OnRotate(InputAction.CallbackContext context);
-        void OnShoot(InputAction.CallbackContext context);
+        void OnFirstWeaponShoot(InputAction.CallbackContext context);
+        void OnSecondWeaponShoot(InputAction.CallbackContext context);
     }
 }

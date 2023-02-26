@@ -2,6 +2,7 @@
 using Infrastructure.Services.Factories;
 using Infrastructure.Wrapper;
 using ShipContent;
+using UnityEngine;
 
 namespace Infrastructure.States
 {
@@ -18,15 +19,15 @@ namespace Infrastructure.States
 
         public void Enter() // сделать дженерик enter'a принимающий гантайп
         {
-            var firstWeapon = _factory.CreateWeapon<Bullet>(GunType.Projectile);
-            var secondWeapon = _factory.CreateWeapon<Bullet>(GunType.Laser); 
+            var firstWeapon = _factory.CreateProjectileWeapon(GunType.Projectile);
+            var secondWeapon = _factory.CreateLaserWeapon(GunType.Laser); 
             var ship = SpawnShip(firstWeapon, secondWeapon); 
             var wrapper = CreateWrapper(ship);
             
             _stateMachine.Enter<GameBehaviourState>();
         }
 
-        private Ship SpawnShip<T, TT>(T firstWeapon, TT secondWeapon) where T : IWeapon<Bullet> where TT : IWeapon<Bullet>
+        private Ship SpawnShip<T, TT>(T firstWeapon, TT secondWeapon) where T : Weapon<Bullet> where TT : Weapon<Bullet>
         {
             return _factory.CreateShip(firstWeapon, secondWeapon);
         }

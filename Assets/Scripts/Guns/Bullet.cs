@@ -1,5 +1,4 @@
-﻿using Guns;
-using Infrastructure;
+﻿using Infrastructure;
 using UnityEngine;
 
 namespace Guns

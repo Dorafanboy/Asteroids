@@ -6,8 +6,9 @@ namespace Infrastructure.Services.Factories
 {
     public interface IFactory : IService
     {
-        Ship CreateShip<T, TT>(T firstWeapon, TT secondWeapon) where T : IWeapon<Bullet> where TT : IWeapon<Bullet>;
+        Ship CreateShip<T, TT>(T firstWeapon, TT secondWeapon) where T : Weapon<Bullet> where TT : Weapon<Bullet>;
         ScreenWrapper CreateWrapper(Ship ship);
-        IWeapon<T> CreateWeapon<T>(GunType gunType) where T : Bullet;
+        ProjectileWeapon CreateProjectileWeapon(GunType gunType);
+        LaserWeapon CreateLaserWeapon(GunType gunType);
     }
 }

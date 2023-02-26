@@ -15,12 +15,12 @@ namespace ShipContent
         public GameObject Prefab { get; }
         public IInputService InputService { get; }
         public float CurrentSpeed { get; set; }
-        public IWeapon<Bullet> FirstWeapon { get; }
-        public IWeapon<Bullet> SecondWeapon { get; }
+        public Weapon<Bullet> FirstWeapon { get; }
+        public Weapon<Bullet> SecondWeapon { get; }
 
         public Ship(float acceleration, float deceleration, float maxSpeed, float rotationSpeed,
             float shotCooldown, int maxAmmo, GameObject prefab, IInputService inputService, 
-            IWeapon<Bullet> firstWeapon, IWeapon<Bullet> secondWeapon)
+            Weapon<Bullet> firstWeapon, Weapon<Bullet> secondWeapon)
         {
             Acceleration = acceleration;
             Deceleration = deceleration;
@@ -34,4 +34,10 @@ namespace ShipContent
             SecondWeapon = secondWeapon;
         }
     }
+}
+
+public interface IShip<out T, out TT> where T : IWeapon<Bullet> where TT : IWeapon<Bullet>
+{
+    T FirstWeapon { get; }
+    TT SecondWeapon { get; }
 }

@@ -11,9 +11,9 @@ namespace Infrastructure.Wrapper
         private readonly List<T> _projectiles;
         private readonly ObjectPool<T> _objectPool;
         private readonly Camera _camera;
-        private readonly Weapon<T> _weapon;
+        private readonly IWeapon<T> _weapon;
 
-        public BulletScreenWrapper(IUpdatable updatable, ObjectPool<T> objectPool, Weapon<T> weapon)
+        public BulletScreenWrapper(IUpdatable updatable, ObjectPool<T> objectPool, IWeapon<T> weapon)
         {
             _updatable = updatable;
             _projectiles = new List<T>();
@@ -27,13 +27,13 @@ namespace Infrastructure.Wrapper
         public void Enable()
         {
             _updatable.Updated += OnUpdated;
-            _weapon.Shooted += OnShooted;
+            _weapon.Fired += OnFired;
         }
 
         public void Disable()
         {
             _updatable.Updated -= OnUpdated;
-            _weapon.Shooted -= OnShooted;
+            _weapon.Fired -= OnFired;
         }
 
         public void OnUpdated(float time)
@@ -65,7 +65,7 @@ namespace Infrastructure.Wrapper
                 viewportPosition.y < 0 || viewportPosition.y > 1);
         }
 
-        private void OnShooted(Bullet bullet)
+        private void OnFired(Bullet bullet)
         {
             _projectiles.Add((T)bullet);
         }

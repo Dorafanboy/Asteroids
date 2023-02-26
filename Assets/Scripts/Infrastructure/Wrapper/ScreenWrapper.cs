@@ -1,9 +1,10 @@
-﻿using ShipContent;
+﻿using Guns;
+using ShipContent;
 using UnityEngine;
 
 namespace Infrastructure.Wrapper
 {
-    public class ScreenWrapper : IUpdateListener
+    public class ScreenWrapper : IUpdateListener 
     {
         private readonly IUpdatable _updatable;
         private readonly Ship _ship;

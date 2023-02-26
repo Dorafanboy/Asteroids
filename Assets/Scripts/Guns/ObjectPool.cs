@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Guns
 {
@@ -27,11 +26,7 @@ namespace Guns
                 }
             }
 
-            var element = _pool.Dequeue();
-            
-            Debug.Log(gunType);
-                        
-            return element;
+            return _pool.Dequeue();
         }
         
         public void ReturnObject(T obj)
