@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Guns
+namespace Entities.Guns
 {
     public interface IWeapon<out T> where T : Bullet
     {

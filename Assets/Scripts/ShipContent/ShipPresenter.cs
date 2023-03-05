@@ -1,4 +1,4 @@
-﻿using Guns;
+﻿using Entities.Guns;
 using Infrastructure;
 using UnityEngine;
 

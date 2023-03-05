@@ -1,4 +1,4 @@
-﻿namespace Guns
+﻿namespace Entities.Guns
 {
     public enum GunType
     {

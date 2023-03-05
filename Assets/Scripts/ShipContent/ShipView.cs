@@ -1,5 +1,4 @@
-﻿using Guns;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace ShipContent
 {

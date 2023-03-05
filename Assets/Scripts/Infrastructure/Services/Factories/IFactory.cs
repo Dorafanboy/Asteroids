@@ -1,6 +1,8 @@
-﻿using Guns;
+﻿using Entities.Enemy;
+using Entities.Guns;
 using Infrastructure.Wrapper;
 using ShipContent;
+using UnityEngine;
 
 namespace Infrastructure.Services.Factories
 {
@@ -10,5 +12,8 @@ namespace Infrastructure.Services.Factories
         ScreenWrapper CreateWrapper(Ship ship);
         ProjectileWeapon CreateProjectileWeapon(GunType gunType);
         LaserWeapon CreateLaserWeapon(GunType gunType);
+        EnemySpawner CreateEnemySpawner(Transform prefabTransform);
+        Ufo CreateUfo(Transform playerShip);
+        Asteroid CreateAsteroid();
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Infrastructure;
 
-namespace Guns
+namespace Entities.Guns
 {
     public class ProjectileWeapon : Weapon<Bullet>
     {

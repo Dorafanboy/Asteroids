@@ -1,5 +1,4 @@
-﻿using Guns;
-using ShipContent;
+﻿using ShipContent;
 using UnityEngine;
 
 namespace Infrastructure.Wrapper
@@ -14,7 +13,7 @@ namespace Infrastructure.Wrapper
         {
             _updatable = updatable;
             _ship = ship;
-            _camera = Camera.main;
+            _camera = Camera.main; // камеру через констурктор передать
         }
 
         public void Enable()

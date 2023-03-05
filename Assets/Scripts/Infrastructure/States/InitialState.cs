@@ -1,4 +1,5 @@
-﻿using Guns;
+﻿using Entities.Enemy;
+using Entities.Guns;
 using Infrastructure.Services.Factories;
 using Infrastructure.Wrapper;
 using ShipContent;
@@ -23,6 +24,8 @@ namespace Infrastructure.States
             var secondWeapon = _factory.CreateLaserWeapon(GunType.Laser); 
             var ship = SpawnShip(firstWeapon, secondWeapon); 
             var wrapper = CreateWrapper(ship);
+            var enemySpawner = _factory.CreateEnemySpawner(ship.Prefab.transform);
+            enemySpawner.Spawn(20);
             
             _stateMachine.Enter<GameBehaviourState>();
         }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Guns;
+using Entities.Guns;
 using UnityEngine;
 
 namespace Infrastructure.Wrapper
@@ -42,15 +42,15 @@ namespace Infrastructure.Wrapper
             {
                 return;
             }
-            
+
             foreach (var proj in _projectiles.ToList())
             {
                 if (IsNeedReturn(proj))
                 {
                     proj.Prefab.SetActive(false);
-                
+
                     _objectPool.ReturnObject(proj);
-                
+
                     _projectiles.Remove(proj);
                 }
             }
@@ -60,9 +60,9 @@ namespace Infrastructure.Wrapper
         {
             var position = bullet.Prefab.transform.position;
             var viewportPosition = _camera.WorldToViewportPoint(position);
-            
-            return (viewportPosition.x > 1 || viewportPosition.x < 0 || 
-                viewportPosition.y < 0 || viewportPosition.y > 1);
+
+            return (viewportPosition.x > 1 || viewportPosition.x < 0 ||
+                    viewportPosition.y < 0 || viewportPosition.y > 1);
         }
 
         private void OnFired(Bullet bullet)

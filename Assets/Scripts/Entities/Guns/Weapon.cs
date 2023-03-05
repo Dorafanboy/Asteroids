@@ -3,7 +3,7 @@ using Infrastructure;
 using Infrastructure.Wrapper;
 using UnityEngine;
 
-namespace Guns
+namespace Entities.Guns
 {
     public abstract class Weapon<T> : IWeapon<T> where T : Bullet
     {
@@ -28,6 +28,6 @@ namespace Guns
             bullet.Prefab.SetActive(true);
 
             Fired?.Invoke(bullet);
-    }
+        }
     }
 }

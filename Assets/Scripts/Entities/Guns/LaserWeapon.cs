@@ -1,7 +1,7 @@
 ﻿using Infrastructure;
 using UnityEngine;
 
-namespace Guns
+namespace Entities.Guns
 {
     public class LaserWeapon : Weapon<Bullet>, IUpdateListener
     {
