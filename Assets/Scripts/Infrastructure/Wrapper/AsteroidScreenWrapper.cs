@@ -10,11 +10,11 @@ namespace Infrastructure.Wrapper
     {
         private readonly IUpdatable _updatable;
         private readonly List<EnemyEntityBase> _asteroids;
-        private readonly ObjectPool<T> _objectPool;
+        private readonly AsteroidObjectPool<T> _objectPool;
         private readonly Camera _camera;
         private readonly EnemySpawner _spawner;
 
-        public AsteroidScreenWrapper(IUpdatable updatable, ObjectPool<T> objectPool, EnemySpawner spawner)
+        public AsteroidScreenWrapper(IUpdatable updatable, AsteroidObjectPool<T> objectPool, EnemySpawner spawner)
         {
             _updatable = updatable;
             _asteroids = new List<EnemyEntityBase>();

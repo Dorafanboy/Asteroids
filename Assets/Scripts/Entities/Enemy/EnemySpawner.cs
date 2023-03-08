@@ -11,7 +11,7 @@ namespace Entities.Enemy
 {
     public class EnemySpawner : IUpdateListener
     {
-        private readonly ObjectPool<EnemyEntityBase> _pool;
+        private readonly AsteroidObjectPool<EnemyEntityBase> _pool;
         private readonly Transform _playerTransform;
         private readonly IFactory _factory;
         private readonly Camera _camera;
@@ -19,20 +19,22 @@ namespace Entities.Enemy
         private readonly IUpdatable _updatable;
         private SpawnPointsContainer _spawnPointsContainer;
 
+        private float _elapsedTime;
+
         public event Action<EnemyEntityBase> Spawned;
 
-        public EnemySpawner(ObjectPool<EnemyEntityBase> pool, Transform playerTransform, IFactory factory,
-            EnemySpawnerSettings settings, SpawnPointsContainer spawnPoints)
+        public EnemySpawner(AsteroidObjectPool<EnemyEntityBase> pool, Transform playerTransform, IFactory factory,
+            EnemySpawnerSettings settings, SpawnPointsContainer spawnPoints, IUpdatable updatable)
         {
             _pool = pool;
             _playerTransform = playerTransform;
             _factory = factory;
             _settings = settings;
-            // _updatable = updatable;  EnemySpawnerSettings settings, IUpdatable updatable
+            _updatable = updatable;
             _camera = Camera.main;
             _spawnPointsContainer = spawnPoints;
 
-            // Enable();
+            Enable();
         }
 
         public void Enable()
@@ -47,40 +49,46 @@ namespace Entities.Enemy
 
         public void OnUpdated(float time)
         {
+            _elapsedTime -= Time.deltaTime;
+            if (_elapsedTime <= 0)
+            {
+                Debug.Log("Spawn");
+                Spawn();
+                _elapsedTime = _settings.SpawnDelay;
+            }
         }
 
-        public void Spawn(int count)
+        private void Spawn()
         {
-            for (int i = 0; i < count; i++)
-            {
-                // var r = Random.Range(0, _settings.CameraBounds.Count);
-                // var random = _settings.CameraBounds[r].SpawnPositions;
-                // var trans = _camera.ViewportToWorldPoint(random);
-                // trans.z = 0;
+            // var trans = _camera.ViewportToWorldPoint(GetSpawnPosition());
+            //
+            // trans.z = 0;
+            //
+            // var spawnedObject = _factory.CreateAsteroid(_playerTransform);
+            //
+            // spawnedObject.Prefab.transform.position = trans;
+            // _pool.ReturnObject(spawnedObject);
+            //
+            // Spawned?.Invoke(spawnedObject);
+            //
+            // trans = _camera.ViewportToWorldPoint(GetSpawnPosition());
+            // var spawnedObjectUfo = _factory.CreateUfo(_playerTransform);
+            //
+            // spawnedObjectUfo.Prefab.transform.position = trans;
+            // _pool.ReturnObject(spawnedObjectUfo);
+            //
+            // Spawned?.Invoke(spawnedObjectUfo);
+            
+            var trans = _camera.ViewportToWorldPoint(GetSpawnPosition());
 
-                var trans = _camera.ViewportToWorldPoint(GetSpawnPosition());
+            trans.z = 0;
+            
+            var spawnedObject = _pool.GetObject(_playerTransform);
 
-                trans.z = 0;
+            spawnedObject.Prefab.transform.position = trans;
+            spawnedObject.Prefab.gameObject.SetActive(true);
 
-                if (i % 2 == 0)
-                {
-                    var spawnedObject = _factory.CreateAsteroid(_playerTransform);
-
-                    spawnedObject.Prefab.transform.position = trans;
-                    _pool.ReturnObject(spawnedObject);
-
-                    Spawned?.Invoke(spawnedObject);
-                }
-                else
-                {
-                    var spawnedObject = _factory.CreateUfo(_playerTransform);
-
-                    spawnedObject.Prefab.transform.position = trans;
-                    _pool.ReturnObject(spawnedObject);
-
-                    Spawned?.Invoke(spawnedObject);
-                }
-            }
+            Spawned?.Invoke(spawnedObject);
         }
 
         private Vector3 GetSpawnPosition()
@@ -186,6 +194,7 @@ public class Asteroid : EnemyEntityBase, IUpdateListener
     {
         Prefab.gameObject.transform.position = Vector3.MoveTowards(Prefab.gameObject.transform.position,
             targetPosition, Speed * Time.deltaTime);
+        
         if (Prefab.gameObject.transform.position == targetPosition)
         {
             targetPosition = Camera.main.ScreenToWorldPoint(new Vector3(Random.Range(0, Screen.width),

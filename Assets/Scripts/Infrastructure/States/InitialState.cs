@@ -25,7 +25,6 @@ namespace Infrastructure.States
             var ship = SpawnShip(firstWeapon, secondWeapon); 
             var wrapper = CreateWrapper(ship);
             var enemySpawner = _factory.CreateEnemySpawner(ship.Prefab.transform);
-            enemySpawner.Spawn(20);
             
             _stateMachine.Enter<GameBehaviourState>();
         }

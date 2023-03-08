@@ -68,12 +68,17 @@ namespace Infrastructure.Services.Factories
         {
             var poolData = _assetProvider.GetData<PoolStaticData>(AssetPath.PoolPath);
 
-            var pool = new ObjectPool<EnemyEntityBase>(poolData.PoolSize);
             var settings = _assetProvider.GetData<EnemySpawnerSettings>(AssetPath.EnemySpawnerSettings);
-            var enemySpawner = new EnemySpawner(pool, prefabTransform, this, settings, CreateSpawnPointsContainer());
+            var pool = new AsteroidObjectPool<EnemyEntityBase>(settings.EnemyCount, CreateUfo, CreateAsteroid);
+            var enemySpawner = new EnemySpawner(pool, prefabTransform, this, settings, CreateSpawnPointsContainer(), _updatable);
             var screenWrapper = new AsteroidScreenWrapper<EnemyEntityBase>(_updatable, pool, enemySpawner);
 
             return enemySpawner;
+        }
+
+        private EnemyEntityBase CreateObject()
+        {
+            throw new System.NotImplementedException();
         }
 
         private SpawnPointsContainer CreateSpawnPointsContainer()
@@ -94,6 +99,7 @@ namespace Infrastructure.Services.Factories
             var ufoData = _assetProvider.GetData<EnemyStaticData>(AssetPath.Ufo);
             var asteroidPrefab = Object.Instantiate(ufoData.Prefab);
             var ufo = new Ufo(asteroidPrefab, ufoData.Speed, playerShip, _updatable);
+            asteroidPrefab.gameObject.SetActive(false);
 
             return ufo;
         }
@@ -103,6 +109,7 @@ namespace Infrastructure.Services.Factories
             var asteroidData = _assetProvider.GetData<EnemyStaticData>(AssetPath.Asteroid);
             var asteroidPrefab = Object.Instantiate(asteroidData.Prefab, Vector3.zero, Quaternion.identity);
             var asteroid = new Asteroid(asteroidPrefab, asteroidData.Speed, _updatable, playerShip);
+            asteroidPrefab.gameObject.SetActive(false);
 
             return asteroid;
         }

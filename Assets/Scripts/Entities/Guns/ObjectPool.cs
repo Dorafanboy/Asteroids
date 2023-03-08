@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Entities.Guns;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Entities.Guns
 {
@@ -45,17 +47,17 @@ namespace Entities.Guns
 public class AsteroidObjectPool<T> where T : IPoolProduct
 {
     private readonly int _poolSize;
-    private readonly Func<T>[] _createObject;
+    private readonly Func<Transform, T>[] _createObject;
     private readonly Queue<T> _pool;
 
-    public AsteroidObjectPool(int poolSize, params Func<T>[] createObject)
+    public AsteroidObjectPool(int poolSize, params Func<Transform, T>[] createObject)
     {
         _poolSize = poolSize;
         _createObject = createObject;
         _pool = new Queue<T>();
     }
 
-    public T GetObject(GunType gunType)
+    public T GetObject(Transform transform)
     {
         if (_pool.Count <= 0)
         {
@@ -63,8 +65,10 @@ public class AsteroidObjectPool<T> where T : IPoolProduct
             {
                 if (_createObject.Length > 0)
                 {
-                    var randomFunc = _createObject.First();
-                    _pool.Enqueue(randomFunc());
+                    var idx = Random.Range(0, _createObject.Length);
+                    var randomFunc = _createObject[idx];
+                    
+                    _pool.Enqueue(randomFunc(transform));
                 }
             }
         }
