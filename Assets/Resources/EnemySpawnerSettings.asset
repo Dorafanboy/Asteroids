@@ -15,18 +15,19 @@ MonoBehaviour:
   _spawnDelay: 0
   _enemyCount: 0
   _cameraBounds:
-  - _spawnPosition: {x: 0.3, y: 1.25, z: 0}
-  - _spawnPosition: {x: 0.5, y: 1.25, z: 0}
-  - _spawnPosition: {x: 0.9, y: 1.25, z: 0}
-  - _spawnPosition: {x: 1.25, y: 0.5, z: 0}
-  - _spawnPosition: {x: 1.25, y: 0.9, z: 0}
-  - _spawnPosition: {x: 1.25, y: 0.7, z: 0}
-  - _spawnPosition: {x: 1.25, y: 0.3, z: 0}
-  - _spawnPosition: {x: 1.25, y: 0.9, z: 0}
-  - _spawnPosition: {x: 0.3, y: 1.25, z: 0}
-  - _spawnPosition: {x: 0.3, y: 1.25, z: 0}
-  - _spawnPosition: {x: 0.3, y: 1.25, z: 0}
-  - _spawnPosition: {x: 0.3, y: 1.25, z: 0}
-  - _spawnPosition: {x: 0.3, y: 0, z: 0}
-  - _spawnPosition: {x: 0.5, y: 0, z: 0}
-  - _spawnPosition: {x: 0.7, y: 0, z: 0}
+  - _spawnPositions: {x: 0.3, y: 1, z: 0}
+  - _spawnPositions: {x: 0.5, y: 1, z: 0}
+  - _spawnPositions: {x: 0.7, y: 1, z: 0}
+  - _spawnPositions: {x: 0.9, y: 1, z: 0}
+  - _spawnPositions: {x: 1, y: 0.3, z: 0}
+  - _spawnPositions: {x: 1, y: 0.5, z: 0}
+  - _spawnPositions: {x: 1, y: 0.7, z: 0}
+  - _spawnPositions: {x: 1, y: 0.9, z: 0}
+  - _spawnPositions: {x: 0, y: 0.3, z: 0}
+  - _spawnPositions: {x: 0, y: 0.5, z: 0}
+  - _spawnPositions: {x: 0, y: 0.7, z: 0}
+  - _spawnPositions: {x: 0, y: 0.9, z: 0}
+  - _spawnPositions: {x: 0, y: 0, z: 0}
+  - _spawnPositions: {x: 0, y: 0, z: 0}
+  - _spawnPositions: {x: 0, y: 0, z: 0}
+  _sideCount: 4

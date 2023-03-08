@@ -10,5 +10,10 @@
         public const string Ufo = "Data/Ufo";
         public const string Asteroid = "Data/Asteroid";
         public const string EnemySpawnerSettings = "EnemySpawnerSettings";
+        
+        public const float TopEdge = 1.2f;
+        public const float RightEdge = 1.2f;
+        public const float BottomEdge = -0.2f;
+        public const float LeftEdge = -0.2f;
     }
 }

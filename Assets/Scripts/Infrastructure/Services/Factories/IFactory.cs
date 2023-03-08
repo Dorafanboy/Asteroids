@@ -14,6 +14,6 @@ namespace Infrastructure.Services.Factories
         LaserWeapon CreateLaserWeapon(GunType gunType);
         EnemySpawner CreateEnemySpawner(Transform prefabTransform);
         Ufo CreateUfo(Transform playerShip);
-        Asteroid CreateAsteroid();
+        Asteroid CreateAsteroid(Transform playerShip);
     }
 }

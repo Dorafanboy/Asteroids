@@ -39,25 +39,26 @@ namespace Infrastructure.Wrapper
 
         public void OnUpdated(float time)
         {
-            if (_asteroids == null)
-            {
-                Debug.Log("no Have elemtn in asteroid wrap");
-
-                return;
-            }
-
-            foreach (var proj in _asteroids.ToList()) // через for
-            {
-                Debug.Log("Have elemtn in asteroid wrap " + _asteroids.Count);
-                var position = proj.Prefab.transform.position;
-                var viewportPosition = _camera.WorldToViewportPoint(position);
-                var newPosition = position;
-
-                newPosition.x = GetWrapPosition(viewportPosition.x, newPosition.x);
-                newPosition.y = GetWrapPosition(viewportPosition.y, newPosition.y);
-        
-                proj.Prefab.transform.position = newPosition;
-            }
+            // if (_asteroids == null)
+            // {
+            //     Debug.Log("no Have elemtn in asteroid wrap");
+            //
+            //     return;
+            // }
+            //
+            // foreach (var proj in _asteroids.ToList()) // через for
+            // {
+            //     Debug.Log("Have elemtn in asteroid wrap " + _asteroids.Count);
+            //     var position = proj.Prefab.transform.position;
+            //     var viewportPosition = _camera.WorldToViewportPoint(position);
+            //     var newPosition = position;
+            //
+            //     newPosition.x = GetWrapPosition(viewportPosition.x, newPosition.x);
+            //     newPosition.y = GetWrapPosition(viewportPosition.y, newPosition.y);
+            //
+            //     newPosition.x = Mathf.Clamp(viewportPosition.x, 0, 1);
+            //     proj.Prefab.transform.position = newPosition;
+            // }
         }
 
         private void OnSpawned(EnemyEntityBase obj)

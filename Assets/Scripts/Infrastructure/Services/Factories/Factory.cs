@@ -1,4 +1,5 @@
-﻿using Entities.Enemy;
+﻿using System.Collections.Generic;
+using Entities.Enemy;
 using Entities.Guns;
 using UnityEngine;
 using Infrastructure.Services.Assets;
@@ -12,7 +13,7 @@ using Bullet = Entities.Guns.Bullet;
 namespace Infrastructure.Services.Factories
 {
     public class Factory : IFactory
-    {   
+    {
         private readonly IAssetProvider _assetProvider;
         private readonly IUpdatable _updatable;
         private readonly IInputService _inputService;
@@ -29,13 +30,13 @@ namespace Infrastructure.Services.Factories
             var shipData = _assetProvider.GetData<ShipStaticData>(AssetPath.ShipPath);
             var shipPrefab = Object.Instantiate(shipData.Prefab, Vector3.zero, Quaternion.identity);
 
-            var ship = new Ship(shipData.Acceleration, shipData.Deceleration, shipData.MaxSpeed, 
+            var ship = new Ship(shipData.Acceleration, shipData.Deceleration, shipData.MaxSpeed,
                 shipData.RotationSpeed, shipData.ShotCooldown, shipData.MaxAmmo, shipPrefab,
                 _inputService, firstWeapon, secondWeapon);
 
             var shipView = new ShipView(ship);
             var shipPresenter = new ShipPresenter(ship, shipView);
-            
+
             return ship;
         }
 
@@ -44,7 +45,7 @@ namespace Infrastructure.Services.Factories
             var wrapper = new ScreenWrapper(_updatable, ship);
             wrapper.Enable();
 
-            return wrapper; 
+            return wrapper;
         }
 
         public ProjectileWeapon CreateProjectileWeapon(GunType gunType)
@@ -59,20 +60,33 @@ namespace Infrastructure.Services.Factories
         {
             GetStats(gunType, out var pool, out var weaponData, out var shotCount);
             var weapon = new LaserWeapon(pool, _updatable, gunType, weaponData.FireCooldown, shotCount);
-            
+
             return weapon;
         }
 
         public EnemySpawner CreateEnemySpawner(Transform prefabTransform)
         {
             var poolData = _assetProvider.GetData<PoolStaticData>(AssetPath.PoolPath);
-            
+
             var pool = new ObjectPool<EnemyEntityBase>(poolData.PoolSize);
             var settings = _assetProvider.GetData<EnemySpawnerSettings>(AssetPath.EnemySpawnerSettings);
-            var enemySpawner = new EnemySpawner(pool, prefabTransform, this, settings);
+            var enemySpawner = new EnemySpawner(pool, prefabTransform, this, settings, CreateSpawnPointsContainer());
             var screenWrapper = new AsteroidScreenWrapper<EnemyEntityBase>(_updatable, pool, enemySpawner);
 
             return enemySpawner;
+        }
+
+        private SpawnPointsContainer CreateSpawnPointsContainer()
+        {
+            var list = new List<ISpawnBehaviour>()
+            {
+                new TopSpawnBehaviour(AssetPath.TopEdge),
+                new BottomSpawnBehaviour(AssetPath.BottomEdge),
+                new RightSpawnBehaviour(AssetPath.LeftEdge),
+                new LeftSpawnBehaviour(AssetPath.RightEdge),
+            };
+
+            return new SpawnPointsContainer(list);
         }
 
         public Ufo CreateUfo(Transform playerShip)
@@ -84,32 +98,33 @@ namespace Infrastructure.Services.Factories
             return ufo;
         }
 
-        public Asteroid CreateAsteroid()
+        public Asteroid CreateAsteroid(Transform playerShip)
         {
             var asteroidData = _assetProvider.GetData<EnemyStaticData>(AssetPath.Asteroid);
             var asteroidPrefab = Object.Instantiate(asteroidData.Prefab, Vector3.zero, Quaternion.identity);
-            var asteroid = new Asteroid(asteroidPrefab, asteroidData.Speed, _updatable);
+            var asteroid = new Asteroid(asteroidPrefab, asteroidData.Speed, _updatable, playerShip);
 
             return asteroid;
         }
 
-        private void GetStats(GunType gunType, out ObjectPool<Bullet> pool, out BulletStaticData weaponData, out int shotCount)
+        private void GetStats(GunType gunType, out ObjectPool<Bullet> pool, out BulletStaticData weaponData,
+            out int shotCount)
         {
             var poolData = _assetProvider.GetData<PoolStaticData>(AssetPath.PoolPath);
             weaponData = gunType == GunType.Projectile
                 ? _assetProvider.GetData<BulletStaticData>(AssetPath.Projectile)
                 : _assetProvider.GetData<BulletStaticData>(AssetPath.Laser);
-            
+
             pool = new ObjectPool<Bullet>(poolData.PoolSize, CreateBullet<Bullet>);
             shotCount = weaponData.ShotsCount;
         }
 
-        private T CreateBullet<T>(GunType gunType) where T : Bullet 
+        private T CreateBullet<T>(GunType gunType) where T : Bullet
         {
             var bulletData = gunType == GunType.Projectile
                 ? _assetProvider.GetData<BulletStaticData>(AssetPath.Projectile)
                 : _assetProvider.GetData<BulletStaticData>(AssetPath.Laser);
-            
+
             var bulletPrefab = Object.Instantiate(bulletData.Prefab);
             bulletPrefab.SetActive(false);
 
