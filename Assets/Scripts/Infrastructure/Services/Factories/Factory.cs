@@ -4,6 +4,8 @@ using Entities.Guns;
 using UnityEngine;
 using Infrastructure.Services.Assets;
 using Infrastructure.Services.Inputs;
+using Infrastructure.Spawners;
+using Infrastructure.Spawners.SpawnPoints;
 using Infrastructure.Wrapper;
 using ShipContent;
 using StaticData;
@@ -70,7 +72,7 @@ namespace Infrastructure.Services.Factories
 
             var settings = _assetProvider.GetData<EnemySpawnerSettings>(AssetPath.EnemySpawnerSettings);
             var pool = new AsteroidObjectPool<EnemyEntityBase>(settings.EnemyCount, CreateUfo, CreateAsteroid);
-            var enemySpawner = new EnemySpawner(pool, prefabTransform, this, settings, CreateSpawnPointsContainer(), _updatable);
+            var enemySpawner = new EnemySpawner(pool, prefabTransform, settings, CreateSpawnPointsContainer(), _updatable);
             var screenWrapper = new AsteroidScreenWrapper<EnemyEntityBase>(_updatable, pool, enemySpawner);
 
             return enemySpawner;
@@ -108,7 +110,7 @@ namespace Infrastructure.Services.Factories
         {
             var asteroidData = _assetProvider.GetData<EnemyStaticData>(AssetPath.Asteroid);
             var asteroidPrefab = Object.Instantiate(asteroidData.Prefab, Vector3.zero, Quaternion.identity);
-            var asteroid = new Asteroid(asteroidPrefab, asteroidData.Speed, _updatable, playerShip);
+            var asteroid = new Asteroid(asteroidPrefab, asteroidData.Speed, _updatable, Camera.main);
             asteroidPrefab.gameObject.SetActive(false);
 
             return asteroid;
