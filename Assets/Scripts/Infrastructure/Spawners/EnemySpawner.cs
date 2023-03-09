@@ -45,7 +45,7 @@ namespace Infrastructure.Spawners
 
         public void OnUpdated(float time)
         {
-            _elapsedTime -= Time.deltaTime;
+            _elapsedTime -= time;
             if (_elapsedTime <= 0)
             {
                 Spawn();

@@ -33,7 +33,7 @@ namespace Entities.Enemy
         public void OnUpdated(float time)
         {
             Prefab.gameObject.transform.position = Vector3.MoveTowards(Prefab.gameObject.transform.position,
-                _targetPosition, Speed * Time.deltaTime);
+                _targetPosition, Speed * time);
         
             if (Prefab.gameObject.transform.position == _targetPosition)
             {
@@ -43,8 +43,11 @@ namespace Entities.Enemy
 
         private Vector3 GetWorldPoint()
         {
-            return _camera.ScreenToWorldPoint(new Vector3(Random.Range(0, Screen.width),
+            var position = _camera.ScreenToWorldPoint(new Vector3(Random.Range(0, Screen.width),
                 Random.Range(0, Screen.height), 0));
+            position.z = 0;
+            
+            return position;
         }
     }
 }

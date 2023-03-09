@@ -1,4 +1,4 @@
-﻿using ShipContent;
+﻿using Entities.Ship;
 using UnityEngine;
 
 namespace Infrastructure.Wrapper
@@ -6,13 +6,13 @@ namespace Infrastructure.Wrapper
     public class ScreenWrapper : IUpdateListener 
     {
         private readonly IUpdatable _updatable;
-        private readonly Ship _ship;
+        private readonly ShipModel _shipModel;
         private readonly Camera _camera;
     
-        public ScreenWrapper(IUpdatable updatable, Ship ship)
+        public ScreenWrapper(IUpdatable updatable, ShipModel shipModel)
         {
             _updatable = updatable;
-            _ship = ship;
+            _shipModel = shipModel;
             _camera = Camera.main; // камеру через констурктор передать
         }
 
@@ -28,14 +28,14 @@ namespace Infrastructure.Wrapper
 
         public void OnUpdated(float time)
         {
-            var position = _ship.Prefab.transform.position;
+            var position = _shipModel.Prefab.transform.position;
             var viewportPosition = _camera.WorldToViewportPoint(position);
             var newPosition = position;
 
             newPosition.x = GetWrapPosition(viewportPosition.x, newPosition.x);
             newPosition.y = GetWrapPosition(viewportPosition.y, newPosition.y);
         
-            _ship.Prefab.transform.position = newPosition;
+            _shipModel.Prefab.transform.position = newPosition;
         }
         
         private float GetWrapPosition(float viewportPosition, float newPosition)

@@ -16,7 +16,7 @@ namespace Infrastructure.States
 
         public void Enter()
         {
-            _sceneLoader.Load(Constant.Main, OnSceneLoaded); 
+            _sceneLoader.Load(SceneNames.Main, OnSceneLoaded); 
         }
 
         public void Exit()

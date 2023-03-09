@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
+using Constants;
 using Entities.Enemy;
 using Entities.Guns;
+using Entities.Ship;
 using UnityEngine;
 using Infrastructure.Services.Assets;
 using Infrastructure.Services.Inputs;
 using Infrastructure.Spawners;
 using Infrastructure.Spawners.SpawnPoints;
 using Infrastructure.Wrapper;
-using ShipContent;
 using StaticData;
 using StaticData.Settings;
 using Bullet = Entities.Guns.Bullet;
@@ -27,14 +28,13 @@ namespace Infrastructure.Services.Factories
             _inputService = inputService;
         }
 
-        public Ship CreateShip<T, TT>(T firstWeapon, TT secondWeapon) where T : Weapon<Bullet> where TT : Weapon<Bullet>
+        public ShipModel CreateShip<T, TT>(T firstWeapon, TT secondWeapon) where T : Weapon<Bullet> where TT : Weapon<Bullet>
         {
             var shipData = _assetProvider.GetData<ShipStaticData>(AssetPath.ShipPath);
             var shipPrefab = Object.Instantiate(shipData.Prefab, Vector3.zero, Quaternion.identity);
 
-            var ship = new Ship(shipData.Acceleration, shipData.Deceleration, shipData.MaxSpeed,
-                shipData.RotationSpeed, shipData.ShotCooldown, shipData.MaxAmmo, shipPrefab,
-                _inputService, firstWeapon, secondWeapon);
+            var ship = new ShipModel(shipData.Acceleration, shipData.Deceleration, shipData.MaxSpeed, shipData.RotationSpeed,
+                shipPrefab, _inputService, firstWeapon, secondWeapon);
 
             var shipView = new ShipView(ship);
             var shipPresenter = new ShipPresenter(ship, shipView);
@@ -42,9 +42,9 @@ namespace Infrastructure.Services.Factories
             return ship;
         }
 
-        public ScreenWrapper CreateWrapper(Ship ship)
+        public ScreenWrapper CreateWrapper(ShipModel shipModel)
         {
-            var wrapper = new ScreenWrapper(_updatable, ship);
+            var wrapper = new ScreenWrapper(_updatable, shipModel);
             wrapper.Enable();
 
             return wrapper;
@@ -87,10 +87,10 @@ namespace Infrastructure.Services.Factories
         {
             var list = new List<ISpawnBehaviour>()
             {
-                new TopSpawnBehaviour(AssetPath.TopEdge),
-                new BottomSpawnBehaviour(AssetPath.BottomEdge),
-                new RightSpawnBehaviour(AssetPath.LeftEdge),
-                new LeftSpawnBehaviour(AssetPath.RightEdge),
+                new TopSpawnBehaviour(SpawnPoints.TopEdge),
+                new BottomSpawnBehaviour(SpawnPoints.BottomEdge),
+                new RightSpawnBehaviour(SpawnPoints.LeftEdge),
+                new LeftSpawnBehaviour(SpawnPoints.RightEdge),
             };
 
             return new SpawnPointsContainer(list);

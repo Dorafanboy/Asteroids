@@ -1,8 +1,8 @@
 ﻿using Entities.Enemy;
 using Entities.Guns;
+using Entities.Ship;
 using Infrastructure.Services.Factories;
 using Infrastructure.Wrapper;
-using ShipContent;
 using UnityEngine;
 
 namespace Infrastructure.States
@@ -29,7 +29,7 @@ namespace Infrastructure.States
             _stateMachine.Enter<GameBehaviourState>();
         }
 
-        private Ship SpawnShip<T, TT>(T firstWeapon, TT secondWeapon) where T : Weapon<Bullet> where TT : Weapon<Bullet>
+        private ShipModel SpawnShip<T, TT>(T firstWeapon, TT secondWeapon) where T : Weapon<Bullet> where TT : Weapon<Bullet>
         {
             return _factory.CreateShip(firstWeapon, secondWeapon);
         }
@@ -38,9 +38,9 @@ namespace Infrastructure.States
         {
         }
 
-        private ScreenWrapper CreateWrapper(Ship ship)
+        private ScreenWrapper CreateWrapper(ShipModel shipModel)
         {
-            return _factory.CreateWrapper(ship);
+            return _factory.CreateWrapper(shipModel);
         }
     }
 }
