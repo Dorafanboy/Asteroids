@@ -1,43 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Infrastructure.Services.Containers;
+using IFactory = Infrastructure.Services.Factories.IFactory;
 
 namespace Infrastructure.States
 {
     public class GameBehaviourState : IState
     {
         private readonly IStateMachine _stateMachine;
-        private readonly IEnumerable<IUpdateListener> _updateListeners;
+        private readonly EventListenerContainer _updateListeners;
+        private readonly IFactory _factory;
+        private readonly List<IEventListener> _listeners;
 
-        public GameBehaviourState(IStateMachine stateMachine)
+        public GameBehaviourState(IStateMachine stateMachine, EventListenerContainer updateListeners, IFactory factory)
         {
             _stateMachine = stateMachine;
-            //_updateListeners = updateListeners;
+            _updateListeners = updateListeners;
+            _factory = factory;
+            _listeners = _updateListeners.Lesten; 
+            //TODO: сделать потом переход из этого стейта, при рестарте там, спмерти и тд
         }
         
         public void Enter()
         {
-            //EnableUpdateListeners();
-
-            //ChangeStateUpdateListeners(_updateListeners.Select(x => x).First().Enable);
+            _factory.Spawned += OnSpawned;
+            
+            EnableUpdateListeners();
         }
 
         public void Exit()
         {
-            //DisableUpdateListeners();
-            //ChangeStateUpdateListeners(_updateListeners.Select(x => x).First().Disable);
+            _factory.Spawned -= OnSpawned;
+
+            DisableUpdateListeners();
         }
 
-        private void ChangeStateUpdateListeners(Action action)
+        private void OnSpawned(IEventListener product)
         {
-            foreach (var listener in _updateListeners)
-            {
-                action.Invoke();
-            }
+            _listeners.Add(product);
+            product.Enable();
         }
 
         private void EnableUpdateListeners()
         {
-            foreach (var listener in _updateListeners)
+            foreach (var listener in _updateListeners.Lesten)
             {
                 listener.Enable();
             }
@@ -45,7 +50,7 @@ namespace Infrastructure.States
         
         private void DisableUpdateListeners()
         {
-            foreach (var listener in _updateListeners)
+            foreach (var listener in _updateListeners.Lesten)
             {
                 listener.Disable();
             }

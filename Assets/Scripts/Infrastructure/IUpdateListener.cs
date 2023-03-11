@@ -1,4 +1,6 @@
-﻿namespace Infrastructure
+﻿using Infrastructure.Services;
+
+namespace Infrastructure
 {
     public interface IUpdateListener : IEventListener
     {

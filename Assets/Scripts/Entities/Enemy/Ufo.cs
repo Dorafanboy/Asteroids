@@ -13,7 +13,7 @@ namespace Entities.Enemy
             _playerShip = playerShip;
             _updatable = updatable;
 
-            Enable();
+           // Enable();
         }
 
         public void Enable()

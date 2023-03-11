@@ -1,5 +1,7 @@
 ﻿using System;
 using Entities.Enemy;
+using Entities.Guns;
+using Entities.Pool;
 using Infrastructure.Spawners.SpawnPoints;
 using StaticData.Settings;
 using UnityEngine;
@@ -30,7 +32,7 @@ namespace Infrastructure.Spawners
             _camera = Camera.main;
             _spawnPointsContainer = spawnPoints;
 
-            Enable();
+            //Enable();
         }
 
         public void Enable()

@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Constants;
 using Entities.Enemy;
 using Entities.Guns;
+using Entities.Pool;
 using Entities.Ship;
 using UnityEngine;
 using Infrastructure.Services.Assets;
+using Infrastructure.Services.Containers;
 using Infrastructure.Services.Inputs;
 using Infrastructure.Spawners;
 using Infrastructure.Spawners.SpawnPoints;
@@ -12,6 +15,7 @@ using Infrastructure.Wrapper;
 using StaticData;
 using StaticData.Settings;
 using Bullet = Entities.Guns.Bullet;
+using Object = UnityEngine.Object;
 
 namespace Infrastructure.Services.Factories
 {
@@ -20,13 +24,18 @@ namespace Infrastructure.Services.Factories
         private readonly IAssetProvider _assetProvider;
         private readonly IUpdatable _updatable;
         private readonly IInputService _inputService;
+        private readonly EventListenerContainer _eventListenerContainer;
+        public event Action<IEventListener> Spawned;
 
-        public Factory(IAssetProvider assetProvider, IUpdatable updatable, IInputService inputService)
+        public Factory(IAssetProvider assetProvider, IUpdatable updatable, IInputService inputService,
+            EventListenerContainer eventListenerContainer)
         {
             _assetProvider = assetProvider;
             _updatable = updatable;
             _inputService = inputService;
+            _eventListenerContainer = eventListenerContainer;
         }
+
 
         public ShipModel CreateShip<T, TT>(T firstWeapon, TT secondWeapon) where T : Weapon<Bullet> where TT : Weapon<Bullet>
         {
@@ -38,6 +47,8 @@ namespace Infrastructure.Services.Factories
 
             var shipView = new ShipView(ship);
             var shipPresenter = new ShipPresenter(ship, shipView);
+            
+            _eventListenerContainer.Register<IEventListener>(shipPresenter);
 
             return ship;
         }
@@ -45,7 +56,9 @@ namespace Infrastructure.Services.Factories
         public ScreenWrapper CreateWrapper(ShipModel shipModel)
         {
             var wrapper = new ScreenWrapper(_updatable, shipModel);
-            wrapper.Enable();
+            _eventListenerContainer.Register<IEventListener>(wrapper);
+            
+            Spawned?.Invoke(wrapper);
 
             return wrapper;
         }
@@ -62,27 +75,24 @@ namespace Infrastructure.Services.Factories
         {
             GetStats(gunType, out var pool, out var weaponData, out var shotCount);
             var weapon = new LaserWeapon(pool, _updatable, gunType, weaponData.FireCooldown, shotCount);
+            _eventListenerContainer.Register<IEventListener>(weapon);
 
             return weapon;
         }
 
         public EnemySpawner CreateEnemySpawner(Transform prefabTransform)
         {
-            var poolData = _assetProvider.GetData<PoolStaticData>(AssetPath.PoolPath);
-
             var settings = _assetProvider.GetData<EnemySpawnerSettings>(AssetPath.EnemySpawnerSettings);
             var pool = new AsteroidObjectPool<EnemyEntityBase>(settings.EnemyCount, CreateUfo, CreateAsteroid);
             var enemySpawner = new EnemySpawner(pool, prefabTransform, settings, CreateSpawnPointsContainer(), _updatable);
             var screenWrapper = new AsteroidScreenWrapper<EnemyEntityBase>(_updatable, pool, enemySpawner);
+            
+            _eventListenerContainer.Register<IEventListener>(enemySpawner);
+            _eventListenerContainer.Register<IEventListener>(screenWrapper);
 
             return enemySpawner;
         }
-
-        private EnemyEntityBase CreateObject()
-        {
-            throw new System.NotImplementedException();
-        }
-
+        
         private SpawnPointsContainer CreateSpawnPointsContainer()
         {
             var list = new List<ISpawnBehaviour>()
@@ -102,6 +112,9 @@ namespace Infrastructure.Services.Factories
             var asteroidPrefab = Object.Instantiate(ufoData.Prefab);
             var ufo = new Ufo(asteroidPrefab, ufoData.Speed, playerShip, _updatable);
             asteroidPrefab.gameObject.SetActive(false);
+            
+            _eventListenerContainer.Register<IEventListener>(ufo);
+            Spawned?.Invoke(ufo);
 
             return ufo;
         }
@@ -112,6 +125,10 @@ namespace Infrastructure.Services.Factories
             var asteroidPrefab = Object.Instantiate(asteroidData.Prefab, Vector3.zero, Quaternion.identity);
             var asteroid = new Asteroid(asteroidPrefab, asteroidData.Speed, _updatable, Camera.main);
             asteroidPrefab.gameObject.SetActive(false);
+            
+            _eventListenerContainer.Register<IEventListener>(asteroid);
+            
+            Spawned?.Invoke(asteroid);
 
             return asteroid;
         }
@@ -138,8 +155,13 @@ namespace Infrastructure.Services.Factories
             bulletPrefab.SetActive(false);
 
             var bullet = new Bullet(bulletData.Deceleration, _updatable, bulletPrefab, bulletData.GunType);
+            
             var bulletView = new ProjectileView();
             var bulletPresenter = new ProjectilePresenter(bullet, bulletView, _updatable);
+            //TODO: переделать presenter под MVP
+
+            _eventListenerContainer.Register<IEventListener>(bullet);
+            Spawned?.Invoke(bullet);
 
             return bullet as T;
         }

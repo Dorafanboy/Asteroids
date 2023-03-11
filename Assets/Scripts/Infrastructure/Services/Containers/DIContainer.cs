@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace Infrastructure.Services.Containers
 {
@@ -25,6 +27,23 @@ namespace Infrastructure.Services.Containers
         public TService GetService<TService>() where TService : IService
         {
             return (TService)_registeredTypes[typeof(TService)];
+        }
+
+        public IEnumerable<TService> GetServices<TService>() where TService : IService
+        {
+            var services = new List<TService>();
+
+            var myClassList = _registeredTypes.Values
+                .Where(x => x.GetType() == typeof(TService));
+
+            Debug.Log("i;m in get services: " + typeof(TService));
+            
+            foreach (var item in myClassList)
+            {
+                Debug.Log(item);
+            }
+
+            return new List<TService>();
         }
     }
 }

@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Ufo
   m_EditorClassIdentifier: 
   _prefab: {fileID: 8432305421831706020, guid: 4ad25bf515d12834c9e4433e4fc2fe47, type: 3}
-  _speed: 0.5
+  _speed: 2

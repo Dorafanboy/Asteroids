@@ -1,4 +1,5 @@
-﻿using Infrastructure;
+﻿using Entities.Pool;
+using Infrastructure;
 
 namespace Entities.Guns
 {

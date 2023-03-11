@@ -13,8 +13,6 @@ namespace Entities.Ship
         {
             _shipModel = shipModel;
             _view = view;
-            
-            Enable();
         }
         
         public void Enable()    

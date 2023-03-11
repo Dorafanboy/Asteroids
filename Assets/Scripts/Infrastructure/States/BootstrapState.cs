@@ -13,13 +13,16 @@ namespace Infrastructure.States
         private readonly IDiContainer _diContainer;
         private readonly ISceneLoader _sceneLoader;
         private readonly IUpdatable _updatable;
+        private readonly EventListenerContainer _eventListenerContainer;
 
-        public BootstrapState(IStateMachine stateMachine, IDiContainer diContainer, ISceneLoader sceneLoader, IUpdatable updatable)
+        public BootstrapState(IStateMachine stateMachine, IDiContainer diContainer, ISceneLoader sceneLoader,
+            IUpdatable updatable, EventListenerContainer eventListenerContainer)
         {
             _stateMachine = stateMachine;
             _diContainer = diContainer;
             _sceneLoader = sceneLoader;
             _updatable = updatable;
+            _eventListenerContainer = eventListenerContainer;
             
             RegisterServices();
         }
@@ -38,7 +41,7 @@ namespace Infrastructure.States
             _diContainer.Register<IAssetProvider>(new AssetProvider());
             _diContainer.Register<IInputService>(new InputService(_updatable, new PlayerInput()));
             _diContainer.Register<IFactory>(new Factory(_diContainer.GetService<IAssetProvider>(), 
-                _updatable, _diContainer.GetService<IInputService>()));
+                _updatable, _diContainer.GetService<IInputService>(), _eventListenerContainer));
         }
 
         private void OnSceneLoaded()

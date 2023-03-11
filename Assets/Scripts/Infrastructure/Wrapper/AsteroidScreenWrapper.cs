@@ -2,6 +2,7 @@
 using System.Linq;
 using Entities.Enemy;
 using Entities.Guns;
+using Entities.Pool;
 using Infrastructure.Spawners;
 using UnityEngine;
 
@@ -23,7 +24,7 @@ namespace Infrastructure.Wrapper
             _camera = Camera.main;
             _spawner = spawner;// через констуктор передать
 
-            Enable();
+           // Enable();
         }
 
         public void Enable()

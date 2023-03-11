@@ -16,13 +16,14 @@ namespace Infrastructure.States
         public StateMachine(ISceneLoader sceneLoader, IDiContainer container, IUpdatable updatable)
         {
             _diContainer = container;
-            
+            var cont = new EventListenerContainer();
+
             _states = new Dictionary<Type, IState>
             {
-                [typeof(BootstrapState)] = new BootstrapState(this, _diContainer, sceneLoader, updatable),
+                [typeof(BootstrapState)] = new BootstrapState(this, _diContainer, sceneLoader, updatable, cont),
                 [typeof(LoadLevelState)] = new LoadLevelState(this, sceneLoader),
                 [typeof(InitialState)] = new InitialState(this, _diContainer.GetService<IFactory>()),
-                [typeof(GameBehaviourState)] = new GameBehaviourState(this)
+                [typeof(GameBehaviourState)] = new GameBehaviourState(this, cont, _diContainer.GetService<IFactory>())
             };
         }
     

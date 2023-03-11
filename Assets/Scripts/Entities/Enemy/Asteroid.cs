@@ -15,7 +15,7 @@ namespace Entities.Enemy
             _updatable = updatable;
             _camera = camera;
 
-            Enable();
+            //Enable();
         }
 
         public void Enable()

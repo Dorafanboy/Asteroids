@@ -1,4 +1,5 @@
-﻿using Infrastructure;
+﻿using Entities.Pool;
+using Infrastructure;
 using UnityEngine;
 
 namespace Entities.Guns
@@ -17,7 +18,7 @@ namespace Entities.Guns
             Prefab = prefab;
             Type = type;
 
-            Enable();
+            //Enable();
         }
         
         public void Enable()

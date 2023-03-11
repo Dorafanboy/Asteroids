@@ -1,4 +1,5 @@
-﻿using Infrastructure;
+﻿using Entities.Pool;
+using Infrastructure;
 using UnityEngine;
 
 namespace Entities.Guns
@@ -18,7 +19,7 @@ namespace Entities.Guns
             _bulletCooldown = bulletCooldown;
             _currentWait = _bulletCooldown;
         
-            Enable();
+           // Enable();
         }
     
         public void Enable()
