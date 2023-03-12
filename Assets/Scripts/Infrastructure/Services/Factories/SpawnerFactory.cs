@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Constants;
-using Entities.Enemy;
-using Entities.Pool;
 using Infrastructure.Services.Assets;
 using Infrastructure.Services.Containers;
 using Infrastructure.Spawners;
 using Infrastructure.Spawners.SpawnPoints;
-using Infrastructure.Wrapper;
 using StaticData.Settings;
 using UnityEngine;
 
@@ -20,21 +16,21 @@ namespace Infrastructure.Services.Factories
         private readonly EventListenerContainer _eventListenerContainer;
         private readonly EnemyFactory _enemyFactory;
 
-        public SpawnerFactory(AssetProvider assetProvider, IUpdatable updatable, EventListenerContainer eventListenerContainer)
+        public SpawnerFactory(AssetProvider assetProvider, IUpdatable updatable, 
+            EventListenerContainer eventListenerContainer, EnemyFactory enemyFactory)
         {
             _assetProvider = assetProvider;
             _updatable = updatable;
             _eventListenerContainer = eventListenerContainer;
+            _enemyFactory = enemyFactory;
         }
 
-        public EnemySpawner CreateEnemySpawner(Transform prefabTransform)
+        public EnemySpawner CreateEnemySpawner(Transform prefabTransform)   //TODO сделать сущность которая за спавны будет отвечать мб
         {
             var settings = _assetProvider.GetData<EnemySpawnerSettings>(AssetPath.EnemySpawnerSettings);
             var enemySpawner = new EnemySpawner(prefabTransform, settings, CreateSpawnPointsContainer(),
                 _updatable, _enemyFactory.CreateAsteroid, _enemyFactory.CreateUfo);
-            
-            //TODO сделать сущность которая за спавны будет отвечать мб
-            
+
             _eventListenerContainer.Register<IEventListener>(enemySpawner);
         
             return enemySpawner;

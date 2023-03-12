@@ -1,7 +1,5 @@
 ﻿using System;
 using Entities.Enemy;
-using Entities.Guns;
-using Entities.Pool;
 using Infrastructure.Spawners.SpawnPoints;
 using StaticData.Settings;
 using UnityEngine;
@@ -56,11 +54,9 @@ namespace Infrastructure.Spawners
         private void Spawn()
         {
             var trans = _camera.ViewportToWorldPoint(GetSpawnPosition());
-
             trans.z = 0;
             
             var spawnedObject = _pool.GetObject(_playerTransform);
-
             spawnedObject.Prefab.transform.position = trans;
             spawnedObject.Prefab.gameObject.SetActive(true);
 

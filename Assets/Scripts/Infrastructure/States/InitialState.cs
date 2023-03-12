@@ -16,8 +16,6 @@ namespace Infrastructure.States
         {
             _stateMachine = stateMachine;
             _factory = factory;
-
-           // CreateEntites();
         }
 
         public void Enter() // сделать дженерик enter'a принимающий гантайп
@@ -29,15 +27,6 @@ namespace Infrastructure.States
             var enemySpawner = _factory.CreateEnemySpawner(ship.Prefab.transform);
             
             _stateMachine.Enter<GameBehaviourState>();
-        }
-
-        private void CreateEntites()
-        {
-            var firstWeapon = _factory.CreateProjectileWeapon(GunType.Projectile);
-            var secondWeapon = _factory.CreateLaserWeapon(GunType.Laser); 
-            var ship = SpawnShip(firstWeapon, secondWeapon); 
-            var wrapper = CreateWrapper(ship);
-            var enemySpawner = _factory.CreateEnemySpawner(ship.Prefab.transform);
         }
 
         private ShipModel SpawnShip<T, TT>(T firstWeapon, TT secondWeapon) where T : Weapon<Bullet> where TT : Weapon<Bullet>

@@ -23,7 +23,7 @@ namespace Infrastructure.Services.Factories
         
         public ProjectileWeapon CreateProjectileWeapon(GunType gunType)
         {
-            GetStats(gunType, out var pool, out var weaponData, out var shotCount);
+            GetStats(out var pool, out var weaponData, out var shotCount, AssetPath.Projectile);
             var weapon = new ProjectileWeapon(pool, _updatable, gunType, weaponData.FireCooldown);
         
             return weapon;
@@ -31,26 +31,25 @@ namespace Infrastructure.Services.Factories
         
         public LaserWeapon CreateLaserWeapon(GunType gunType)
         {
-            GetStats(gunType, out var pool, out var weaponData, out var shotCount);
+            GetStats(out var pool, out var weaponData, out var shotCount, AssetPath.Laser);
             var weapon = new LaserWeapon(pool, _updatable, gunType, weaponData.FireCooldown, shotCount);
+            
             _eventListenerContainer.Register<IEventListener>(weapon);
         
             return weapon;
         }
         
-        private void GetStats(GunType gunType, out ObjectPool<Bullet> pool, out BulletStaticData weaponData,
-            out int shotCount)
+        private void GetStats(out ObjectPool<Bullet> pool, out BulletStaticData weaponData,
+            out int shotCount, string path) //TODO: гантайп не нужен будет
         {
             var poolData = _assetProvider.GetData<PoolStaticData>(AssetPath.PoolPath);
-            weaponData = gunType == GunType.Projectile
-                ? _assetProvider.GetData<BulletStaticData>(AssetPath.Projectile)
-                : _assetProvider.GetData<BulletStaticData>(AssetPath.Laser);
+            weaponData = _assetProvider.GetData<BulletStaticData>(path);
         
             pool = new ObjectPool<Bullet>(poolData.PoolSize, CreateBullet<Bullet>);
             shotCount = weaponData.ShotsCount;
         }
         
-        private T CreateBullet<T>(GunType gunType) where T : Bullet
+        private T CreateBullet<T>(GunType gunType) where T : Bullet         //TODO: переделать presenter под MVP
         {
             var bulletData = gunType == GunType.Projectile
                 ? _assetProvider.GetData<BulletStaticData>(AssetPath.Projectile)
@@ -63,11 +62,15 @@ namespace Infrastructure.Services.Factories
             
             var bulletView = new ProjectileView();
             var bulletPresenter = new ProjectilePresenter(bullet, bulletView, _updatable);
-            //TODO: переделать presenter под MVP
 
             _eventListenerContainer.Register<IEventListener>(bullet);
 
             return bullet as T;
         }
     }
+}
+
+public class GunData
+{
+    
 }
