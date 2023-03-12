@@ -36,7 +36,6 @@ namespace Infrastructure.Services.Factories
             _eventListenerContainer = eventListenerContainer;
         }
 
-
         public ShipModel CreateShip<T, TT>(T firstWeapon, TT secondWeapon) where T : Weapon<Bullet> where TT : Weapon<Bullet>
         {
             var shipData = _assetProvider.GetData<ShipStaticData>(AssetPath.ShipPath);
@@ -83,12 +82,10 @@ namespace Infrastructure.Services.Factories
         public EnemySpawner CreateEnemySpawner(Transform prefabTransform)
         {
             var settings = _assetProvider.GetData<EnemySpawnerSettings>(AssetPath.EnemySpawnerSettings);
-            var pool = new AsteroidObjectPool<EnemyEntityBase>(settings.EnemyCount, CreateUfo, CreateAsteroid);
-            var enemySpawner = new EnemySpawner(pool, prefabTransform, settings, CreateSpawnPointsContainer(), _updatable);
-            var screenWrapper = new AsteroidScreenWrapper<EnemyEntityBase>(_updatable, pool, enemySpawner);
+            var enemySpawner = new EnemySpawner(prefabTransform, settings, CreateSpawnPointsContainer(), _updatable,
+                CreateUfo, CreateAsteroid);
             
             _eventListenerContainer.Register<IEventListener>(enemySpawner);
-            _eventListenerContainer.Register<IEventListener>(screenWrapper);
 
             return enemySpawner;
         }

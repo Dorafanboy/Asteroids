@@ -4,7 +4,7 @@ using Infrastructure.Services.Factories;
 
 namespace Infrastructure.Spawners
 {
-    public class BulletSpawner
+    public class BulletSpawner : ISpawner
     {
         private readonly ObjectPool<Bullet> _pool;
         private readonly IFactory _factory;

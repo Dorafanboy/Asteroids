@@ -9,7 +9,7 @@ using Random = UnityEngine.Random;
 
 namespace Infrastructure.Spawners
 {
-    public class EnemySpawner : IUpdateListener
+    public class EnemySpawner : IUpdateListener 
     {
         private readonly AsteroidObjectPool<EnemyEntityBase> _pool;
         private readonly Transform _playerTransform;
@@ -22,17 +22,15 @@ namespace Infrastructure.Spawners
 
         public event Action<EnemyEntityBase> Spawned;
 
-        public EnemySpawner(AsteroidObjectPool<EnemyEntityBase> pool, Transform playerTransform,
-            EnemySpawnerSettings settings, SpawnPointsContainer spawnPoints, IUpdatable updatable)
+        public EnemySpawner(Transform playerTransform, EnemySpawnerSettings settings, 
+            SpawnPointsContainer spawnPoints, IUpdatable updatable, params Func<Transform, EnemyEntityBase>[] createObject)
         {
-            _pool = pool;
+            _pool = new AsteroidObjectPool<EnemyEntityBase>(settings.EnemyCount, createObject);
             _playerTransform = playerTransform;
             _settings = settings;
             _updatable = updatable;
             _camera = Camera.main;
             _spawnPointsContainer = spawnPoints;
-
-            //Enable();
         }
 
         public void Enable()
