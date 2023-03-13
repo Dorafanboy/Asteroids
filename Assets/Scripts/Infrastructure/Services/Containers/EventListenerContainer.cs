@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Infrastructure.Services.Containers
@@ -6,6 +7,8 @@ namespace Infrastructure.Services.Containers
     public class EventListenerContainer
     {
         private readonly List<IEventListener> _listeners;
+
+        public event Action<IEventListener> Registered;
 
         public List<IEventListener> Lesten => _listeners;
 
@@ -16,14 +19,14 @@ namespace Infrastructure.Services.Containers
 
         public void Register<TService>(TService service) where TService : IService
         {
-            Debug.Log("ADD");
             _listeners.Add((IEventListener)service);
+            
+            Registered?.Invoke((IEventListener)service);
         }
         
         public IEnumerable<IEventListener> GetServices()
         {
             var services = new List<IEventListener>();
-            Debug.Log("Get service" + _listeners.Count);
             foreach (var item in _listeners)
             {
                 Debug.Log("Get service" + item);

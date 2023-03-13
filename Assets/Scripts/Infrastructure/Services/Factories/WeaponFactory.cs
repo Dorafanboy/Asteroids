@@ -1,4 +1,6 @@
-﻿using Constants;
+﻿using System.Collections.Generic;
+using Constants;
+using Entities.Enemy;
 using Entities.Guns;
 using Entities.Pool;
 using Infrastructure.Services.Assets;
@@ -8,52 +10,54 @@ using UnityEngine;
 
 namespace Infrastructure.Services.Factories
 {
-    public class WeaponFactory
+    public class WeaponFactory : FactoryBase
     {
-        private readonly EventListenerContainer _eventListenerContainer;
         private readonly IUpdatable _updatable;
-        private readonly AssetProvider _assetProvider;
+        private readonly Dictionary<GunType, BulletStaticData> _factories;
+        private readonly Camera _camera;
 
-        public WeaponFactory(EventListenerContainer eventListenerContainer, IUpdatable updatable, AssetProvider assetProvider)
+        public WeaponFactory(IAssetProvider assetProvider, EventListenerContainer eventListenerContainer,
+            IUpdatable updatable, Camera camera) : base(assetProvider, eventListenerContainer)
         {
-            _eventListenerContainer = eventListenerContainer;
             _updatable = updatable;
-            _assetProvider = assetProvider;
+            _camera = camera;
+
+            _factories = new Dictionary<GunType, BulletStaticData>
+            {
+                { GunType.Laser, AssetProvider.GetData<BulletStaticData>(AssetPath.Laser) },
+                { GunType.Projectile, AssetProvider.GetData<BulletStaticData>(AssetPath.Projectile) },
+            };
         }
-        
+
         public ProjectileWeapon CreateProjectileWeapon(GunType gunType)
         {
-            GetStats(out var pool, out var weaponData, out var shotCount, AssetPath.Projectile);
-            var weapon = new ProjectileWeapon(pool, _updatable, gunType, weaponData.FireCooldown);
+            GetStats(out var pool, out var weaponData, AssetPath.Projectile);
+            var weapon = new ProjectileWeapon(pool, _updatable, gunType, _camera);
         
             return weapon;
         }
-        
+
         public LaserWeapon CreateLaserWeapon(GunType gunType)
         {
-            GetStats(out var pool, out var weaponData, out var shotCount, AssetPath.Laser);
-            var weapon = new LaserWeapon(pool, _updatable, gunType, weaponData.FireCooldown, shotCount);
+            GetStats(out var pool, out var weaponData, AssetPath.Laser);
+            var weapon = new LaserWeapon(pool, _updatable, gunType, weaponData.FireCooldown, _camera);
             
-            _eventListenerContainer.Register<IEventListener>(weapon);
+            EventListenerContainer.Register<IEventListener>(weapon);
         
             return weapon;
         }
-        
-        private void GetStats(out ObjectPool<Bullet> pool, out BulletStaticData weaponData,
-            out int shotCount, string path) //TODO: гантайп не нужен будет
+
+        private void GetStats(out ObjectPool<Bullet> pool, out BulletStaticData weaponData, string path) //TODO: гантайп не нужен будет
         {
-            var poolData = _assetProvider.GetData<PoolStaticData>(AssetPath.PoolPath);
-            weaponData = _assetProvider.GetData<BulletStaticData>(path);
+            var poolData = AssetProvider.GetData<PoolStaticData>(AssetPath.PoolPath);
+            weaponData = AssetProvider.GetData<BulletStaticData>(path);
         
             pool = new ObjectPool<Bullet>(poolData.PoolSize, CreateBullet<Bullet>);
-            shotCount = weaponData.ShotsCount;
         }
-        
+
         private T CreateBullet<T>(GunType gunType) where T : Bullet         //TODO: переделать presenter под MVP
         {
-            var bulletData = gunType == GunType.Projectile
-                ? _assetProvider.GetData<BulletStaticData>(AssetPath.Projectile)
-                : _assetProvider.GetData<BulletStaticData>(AssetPath.Laser);
+            var bulletData = _factories[gunType];
 
             var bulletPrefab = Object.Instantiate(bulletData.Prefab);
             bulletPrefab.SetActive(false);
@@ -63,14 +67,9 @@ namespace Infrastructure.Services.Factories
             var bulletView = new ProjectileView();
             var bulletPresenter = new ProjectilePresenter(bullet, bulletView, _updatable);
 
-            _eventListenerContainer.Register<IEventListener>(bullet);
+            EventListenerContainer.Register<IEventListener>(bullet);
 
             return bullet as T;
         }
     }
-}
-
-public class GunData
-{
-    
 }

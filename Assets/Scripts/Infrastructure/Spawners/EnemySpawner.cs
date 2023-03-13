@@ -9,7 +9,7 @@ namespace Infrastructure.Spawners
 {
     public class EnemySpawner : IUpdateListener 
     {
-        private readonly AsteroidObjectPool<EnemyEntityBase> _pool;
+        private readonly EnemyObjectPool<EnemyEntityBase> _pool;
         private readonly Transform _playerTransform;
         private readonly Camera _camera;
         private readonly EnemySpawnerSettings _settings;
@@ -21,13 +21,13 @@ namespace Infrastructure.Spawners
         public event Action<EnemyEntityBase> Spawned;
 
         public EnemySpawner(Transform playerTransform, EnemySpawnerSettings settings, 
-            SpawnPointsContainer spawnPoints, IUpdatable updatable, params Func<Transform, EnemyEntityBase>[] createObject)
+            SpawnPointsContainer spawnPoints, IUpdatable updatable, Camera camera, params Func<Transform, EnemyEntityBase>[] createObject)
         {
-            _pool = new AsteroidObjectPool<EnemyEntityBase>(settings.EnemyCount, createObject);
+            _pool = new EnemyObjectPool<EnemyEntityBase>(settings.EnemyCount, createObject);
             _playerTransform = playerTransform;
             _settings = settings;
             _updatable = updatable;
-            _camera = Camera.main;
+            _camera = camera;
             _spawnPointsContainer = spawnPoints;
         }
 

@@ -10,22 +10,19 @@ using Object = UnityEngine.Object;
 
 namespace Infrastructure.Services.Factories
 {
-    public class ShipFactory
+    public class ShipFactory : FactoryBase
     {
-        private readonly AssetProvider _assetProvider;
         private readonly IInputService _inputService;
-        private readonly EventListenerContainer _eventListenerContainer;
-
-        public ShipFactory(AssetProvider assetProvider, IInputService inputService, EventListenerContainer eventListenerContainer)
+        
+        public ShipFactory(IAssetProvider assetProvider, EventListenerContainer eventListenerContainer,
+            IInputService inputService) : base(assetProvider, eventListenerContainer)
         {
-            _assetProvider = assetProvider;
             _inputService = inputService;
-            _eventListenerContainer = eventListenerContainer;
         }
 
-        public ShipModel CreateShip<T, TT>(T firstWeapon, TT secondWeapon) where T : Weapon<Bullet> where TT : Weapon<Bullet>
+        public ShipModel CreateShip<T, TT>(T firstWeapon, TT secondWeapon) where T : WeaponBase<Bullet> where TT : WeaponBase<Bullet>
         {
-            var shipData = _assetProvider.GetData<ShipStaticData>(AssetPath.ShipPath);
+            var shipData = AssetProvider.GetData<ShipStaticData>(AssetPath.ShipPath);
             var shipPrefab = Object.Instantiate(shipData.Prefab, Vector3.zero, Quaternion.identity);
 
             var ship = new ShipModel(shipData.Acceleration, shipData.Deceleration, shipData.MaxSpeed, shipData.RotationSpeed,
@@ -34,7 +31,7 @@ namespace Infrastructure.Services.Factories
             var shipView = new ShipView(ship);
             var shipPresenter = new ShipPresenter(ship, shipView);
             
-            _eventListenerContainer.Register<IEventListener>(shipPresenter);
+            EventListenerContainer.Register<IEventListener>(shipPresenter);
 
             return ship;
         }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Infrastructure.Loaders;
 using Infrastructure.Services.Containers;
-using Infrastructure.Services.Factories;
+using UnityEngine;
 
 namespace Infrastructure.States
 {
@@ -17,13 +17,14 @@ namespace Infrastructure.States
         {
             _diContainer = container;
             var cont = new EventListenerContainer();
-
+            var camera = Camera.main;
+            
             _states = new Dictionary<Type, IState>
             {
-                [typeof(BootstrapState)] = new BootstrapState(this, _diContainer, sceneLoader, updatable, cont),
+                [typeof(BootstrapState)] = new BootstrapState(this, _diContainer, sceneLoader, updatable, cont, camera),
                 [typeof(LoadLevelState)] = new LoadLevelState(this, sceneLoader),
-                [typeof(InitialState)] = new InitialState(this, _diContainer.GetService<IFactory>()),
-                [typeof(GameBehaviourState)] = new GameBehaviourState(this, cont, _diContainer.GetService<IFactory>())
+                [typeof(InitialState)] = new InitialState(this, _diContainer),
+                [typeof(GameBehaviourState)] = new GameBehaviourState(this, cont)
             };
         }
     

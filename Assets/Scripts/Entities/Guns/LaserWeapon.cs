@@ -4,22 +4,19 @@ using UnityEngine;
 
 namespace Entities.Guns
 {
-    public class LaserWeapon : Weapon<Bullet>, IUpdateListener
+    public class LaserWeapon : WeaponBase<Bullet>, IUpdateListener
     {
         private readonly IUpdatable _updatable;
         private readonly float _bulletCooldown;
         private float _currentWait;
         private int _remainingShots;
     
-        public LaserWeapon(ObjectPool<Bullet> objectPool, IUpdatable updatable, GunType gunType, float bulletCooldown, int remainingShots) 
-            : base(objectPool, updatable, gunType)
+        public LaserWeapon(ObjectPool<Bullet> objectPool, IUpdatable updatable, GunType gunType, float bulletCooldown,
+            Camera camera) : base(objectPool, updatable, gunType, camera)
         {
             _updatable = updatable; 
-            _remainingShots = remainingShots;
             _bulletCooldown = bulletCooldown;
             _currentWait = _bulletCooldown;
-        
-           // Enable();
         }
     
         public void Enable()

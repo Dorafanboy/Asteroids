@@ -9,11 +9,11 @@ namespace Infrastructure.Wrapper
         private readonly ShipModel _shipModel;
         private readonly Camera _camera;
     
-        public ScreenWrapper(IUpdatable updatable, ShipModel shipModel)
+        public ScreenWrapper(IUpdatable updatable, ShipModel shipModel, Camera camera)
         {
             _updatable = updatable;
             _shipModel = shipModel;
-            _camera = Camera.main; // камеру через констурктор передать
+            _camera = camera; // камеру через констурктор передать
         }
 
         public void Enable()

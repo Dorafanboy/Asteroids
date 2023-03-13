@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Infrastructure.Services.Containers;
-using IFactory = Infrastructure.Services.Factories.IFactory;
 
 namespace Infrastructure.States
 {
@@ -8,33 +7,31 @@ namespace Infrastructure.States
     {
         private readonly IStateMachine _stateMachine;
         private readonly EventListenerContainer _updateListeners;
-        private readonly IFactory _factory;
         private readonly List<IEventListener> _listeners;
 
-        public GameBehaviourState(IStateMachine stateMachine, EventListenerContainer updateListeners, IFactory factory)
+        public GameBehaviourState(IStateMachine stateMachine, EventListenerContainer updateListeners)
         {
             _stateMachine = stateMachine;
             _updateListeners = updateListeners;
-            _factory = factory;
             _listeners = _updateListeners.Lesten; 
             //TODO: сделать потом переход из этого стейта, при рестарте там, спмерти и тд
         }
         
         public void Enter()
         {
-            _factory.Spawned += OnSpawned;
+            _updateListeners.Registered += OnRegistered;
             
             EnableUpdateListeners();
         }
 
         public void Exit()
         {
-            _factory.Spawned -= OnSpawned;
+            _updateListeners.Registered -= OnRegistered;
 
             DisableUpdateListeners();
         }
 
-        private void OnSpawned(IEventListener product)
+        private void OnRegistered(IEventListener product)
         {
             _listeners.Add(product);
             product.Enable();

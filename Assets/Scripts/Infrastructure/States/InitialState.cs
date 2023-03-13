@@ -1,37 +1,42 @@
-﻿using Entities.Enemy;
-using Entities.Guns;
+﻿using Entities.Guns;
 using Entities.Ship;
+using Infrastructure.Services.Containers;
 using Infrastructure.Services.Factories;
 using Infrastructure.Wrapper;
-using UnityEngine;
 
 namespace Infrastructure.States
 {
     public class InitialState : IState
     {
         private readonly StateMachine _stateMachine;
-        private readonly IFactory _factory;
+        private readonly WeaponFactory _weaponFactory;
+        private readonly SpawnerFactory _spawnerFactory;
+        private readonly ShipFactory _shipFactory;
+        private readonly WrapperFactory _wrapperFactory;
 
-        public InitialState(StateMachine stateMachine, IFactory factory)
+        public InitialState(StateMachine stateMachine, IDiContainer diContainer)
         {
             _stateMachine = stateMachine;
-            _factory = factory;
+            _weaponFactory = diContainer.GetService<WeaponFactory>();
+            _spawnerFactory = diContainer.GetService<SpawnerFactory>();
+            _shipFactory = diContainer.GetService<ShipFactory>();
+            _wrapperFactory = diContainer.GetService<WrapperFactory>();
         }
 
         public void Enter() // сделать дженерик enter'a принимающий гантайп
         {
-            var firstWeapon = _factory.CreateProjectileWeapon(GunType.Projectile);
-            var secondWeapon = _factory.CreateLaserWeapon(GunType.Laser); 
+            var firstWeapon = _weaponFactory.CreateProjectileWeapon(GunType.Projectile);
+            var secondWeapon = _weaponFactory.CreateLaserWeapon(GunType.Laser); 
             var ship = SpawnShip(firstWeapon, secondWeapon); 
             var wrapper = CreateWrapper(ship);
-            var enemySpawner = _factory.CreateEnemySpawner(ship.Prefab.transform);
+            var enemySpawner = _spawnerFactory.CreateEnemySpawner(ship.Prefab.transform);
             
             _stateMachine.Enter<GameBehaviourState>();
         }
 
-        private ShipModel SpawnShip<T, TT>(T firstWeapon, TT secondWeapon) where T : Weapon<Bullet> where TT : Weapon<Bullet>
+        private ShipModel SpawnShip<T, TT>(T firstWeapon, TT secondWeapon) where T : WeaponBase<Bullet> where TT : WeaponBase<Bullet>
         {
-            return _factory.CreateShip(firstWeapon, secondWeapon);
+            return _shipFactory.CreateShip(firstWeapon, secondWeapon);
         }
 
         public void Exit()
@@ -40,7 +45,7 @@ namespace Infrastructure.States
 
         private ScreenWrapper CreateWrapper(ShipModel shipModel)
         {
-            return _factory.CreateWrapper(shipModel);
+            return _wrapperFactory.CreateWrapper(shipModel);
         }
     }
 }

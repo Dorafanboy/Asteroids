@@ -14,13 +14,13 @@ namespace Infrastructure.Wrapper
         private readonly Camera _camera;
         private readonly IWeapon<T> _weapon;
 
-        public BulletScreenWrapper(IUpdatable updatable, ObjectPool<T> objectPool, IWeapon<T> weapon)
+        public BulletScreenWrapper(IUpdatable updatable, ObjectPool<T> objectPool, IWeapon<T> weapon, Camera camera)
         {
             _updatable = updatable;
             _projectiles = new List<T>();
             _objectPool = objectPool;
             _weapon = weapon;
-            _camera = Camera.main;
+            _camera = camera;
 
             Enable();
         }

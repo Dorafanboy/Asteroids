@@ -13,11 +13,11 @@ namespace Entities.Ship
         public GameObject Prefab { get; }
         public IInputService InputService { get; }
         public float CurrentSpeed { get; set; }
-        public Weapon<Bullet> FirstWeapon { get; }
-        public Weapon<Bullet> SecondWeapon { get; }
+        public WeaponBase<Bullet> FirstWeapon { get; }
+        public WeaponBase<Bullet> SecondWeapon { get; }
 
         public ShipModel(float acceleration, float deceleration, float maxSpeed, float rotationSpeed, GameObject prefab, 
-            IInputService inputService, Weapon<Bullet> firstWeapon, Weapon<Bullet> secondWeapon)
+            IInputService inputService, WeaponBase<Bullet> firstWeapon, WeaponBase<Bullet> secondWeapon)
         {
             Acceleration = acceleration;
             Deceleration = deceleration;

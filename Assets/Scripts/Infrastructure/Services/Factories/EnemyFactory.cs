@@ -9,21 +9,17 @@ using Object = UnityEngine.Object;
 
 namespace Infrastructure.Services.Factories
 {
-    public class EnemyFactory
+    public class EnemyFactory : FactoryBase
     {
-        private readonly AssetProvider _assetProvider;
         private readonly IUpdatable _updatable;
-        private readonly EventListenerContainer _eventListenerContainer;
         private readonly Camera _camera;
         
         public event Action<IEventListener> Spawned;
-
-        public EnemyFactory(AssetProvider assetProvider, IUpdatable updatable,
-            EventListenerContainer eventListenerContainer, Camera camera)
+        
+        public EnemyFactory(IAssetProvider assetProvider, EventListenerContainer eventListenerContainer, Camera camera,
+            IUpdatable updatable) : base(assetProvider, eventListenerContainer)
         {
-            _assetProvider = assetProvider;
             _updatable = updatable;
-            _eventListenerContainer = eventListenerContainer;
             _camera = camera;
         }
 
@@ -49,17 +45,17 @@ namespace Infrastructure.Services.Factories
 
         private GameObject GetEnemyPrefab(out EnemyStaticData data, string path)
         {
-            data = _assetProvider.GetData<EnemyStaticData>(path);
+            data = AssetProvider.GetData<EnemyStaticData>(path);
             var asteroidPrefab = Object.Instantiate(data.Prefab);
             asteroidPrefab.gameObject.SetActive(false);
 
             return asteroidPrefab;
         }
 
-        private void InvokeAction(EnemyEntityBase asteroid)
+        private void InvokeAction(EnemyEntityBase enemy)
         {
-            _eventListenerContainer.Register<IEventListener>(asteroid);
-            Spawned?.Invoke(asteroid);
+            EventListenerContainer.Register<IEventListener>(enemy);
+            Spawned?.Invoke(enemy);
         }
     }
 }

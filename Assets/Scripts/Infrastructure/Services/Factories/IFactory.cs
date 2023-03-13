@@ -11,7 +11,7 @@ namespace Infrastructure.Services.Factories
     public interface IFactory : IService
     {
         event Action<IEventListener> Spawned;
-        ShipModel CreateShip<T, TT>(T firstWeapon, TT secondWeapon) where T : Weapon<Bullet> where TT : Weapon<Bullet>;
+        ShipModel CreateShip<T, TT>(T firstWeapon, TT secondWeapon) where T : WeaponBase<Bullet> where TT : WeaponBase<Bullet>;
         ScreenWrapper CreateWrapper(ShipModel shipModel);
         ProjectileWeapon CreateProjectileWeapon(GunType gunType);
         LaserWeapon CreateLaserWeapon(GunType gunType);

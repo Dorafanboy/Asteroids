@@ -6,17 +6,17 @@ using UnityEngine;
 
 namespace Entities.Guns
 {
-    public abstract class Weapon<T> : IWeapon<T> where T : Bullet
+    public abstract class WeaponBase<T> : IWeapon<T> where T : Bullet
     {
         private readonly ObjectPool<T> _objectPool;
         private readonly BulletScreenWrapper<T> _bulletWrapper;
         private readonly GunType _gunType;
         public event Action<T> Fired;
         
-        protected Weapon(ObjectPool<T> objectPool, IUpdatable updatable, GunType gunType)
+        protected WeaponBase(ObjectPool<T> objectPool, IUpdatable updatable, GunType gunType, Camera camera)
         {
             _objectPool = objectPool;
-            _bulletWrapper = new BulletScreenWrapper<T>(updatable, _objectPool, this);
+            _bulletWrapper = new BulletScreenWrapper<T>(updatable, _objectPool, this, camera);
             _gunType = gunType;
         }
 

@@ -9,33 +9,31 @@ using UnityEngine;
 
 namespace Infrastructure.Services.Factories
 {
-    public class SpawnerFactory
+    public class SpawnerFactory : FactoryBase
     {
-        private readonly AssetProvider _assetProvider;
         private readonly IUpdatable _updatable;
-        private readonly EventListenerContainer _eventListenerContainer;
         private readonly EnemyFactory _enemyFactory;
+        private readonly Camera _camera;
 
-        public SpawnerFactory(AssetProvider assetProvider, IUpdatable updatable, 
-            EventListenerContainer eventListenerContainer, EnemyFactory enemyFactory)
+        public SpawnerFactory(IAssetProvider assetProvider, EventListenerContainer eventListenerContainer,
+            IUpdatable updatable, EnemyFactory enemyFactory, Camera camera) : base(assetProvider, eventListenerContainer)
         {
-            _assetProvider = assetProvider;
             _updatable = updatable;
-            _eventListenerContainer = eventListenerContainer;
             _enemyFactory = enemyFactory;
+            _camera = camera;
         }
-
+        
         public EnemySpawner CreateEnemySpawner(Transform prefabTransform)   //TODO сделать сущность которая за спавны будет отвечать мб
         {
-            var settings = _assetProvider.GetData<EnemySpawnerSettings>(AssetPath.EnemySpawnerSettings);
+            var settings = AssetProvider.GetData<EnemySpawnerSettings>(AssetPath.EnemySpawnerSettings);
             var enemySpawner = new EnemySpawner(prefabTransform, settings, CreateSpawnPointsContainer(),
-                _updatable, _enemyFactory.CreateAsteroid, _enemyFactory.CreateUfo);
+                _updatable, _camera, _enemyFactory.CreateAsteroid, _enemyFactory.CreateUfo);
 
-            _eventListenerContainer.Register<IEventListener>(enemySpawner);
+            EventListenerContainer.Register<IEventListener>(enemySpawner);
         
             return enemySpawner;
         }
-        
+
         private SpawnPointsContainer CreateSpawnPointsContainer()
         {
             var list = new List<ISpawnBehaviour>()
@@ -50,8 +48,11 @@ namespace Infrastructure.Services.Factories
         }
 
         // private BulletSpawner CreateBulletSpawner()
+
         // {
+
         //     return new BulletSpawner();
+
         // }
     }
 }

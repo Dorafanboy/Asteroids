@@ -50,11 +50,6 @@ public interface ITest
     
 }
 
-public abstract class FactoryBase
-{
-    
-}
-
 // public abstract class PoolBase<T> where T : IPoolProduct
 // {
 //     private readonly FactoryBase _factoryBase;
@@ -88,13 +83,13 @@ public abstract class FactoryBase
 //     }
 // }
 
-public class AsteroidObjectPool<T> where T : IPoolProduct
+public class EnemyObjectPool<T> where T : IPoolProduct
 {
     private readonly int _poolSize;
     private readonly Func<Transform, T>[] _createObject;
     private readonly Queue<T> _pool;
 
-    public AsteroidObjectPool(int poolSize, params Func<Transform, T>[] createObject)
+    public EnemyObjectPool(int poolSize, params Func<Transform, T>[] createObject)
     {
         _poolSize = poolSize;
         _createObject = createObject;
