@@ -43,9 +43,6 @@ namespace Infrastructure.States
         {
             _diContainer.Register<IAssetProvider>(new AssetProvider());
             _diContainer.Register<IInputService>(new InputService(_updatable, new PlayerInput()));
-            // _diContainer.Register<IFactory>(new Factory(_diContainer.GetService<IAssetProvider>(), 
-            //     _updatable, _diContainer.GetService<IInputService>(), _eventListenerContainer));
-            
             RegisterFactories();
         }
 

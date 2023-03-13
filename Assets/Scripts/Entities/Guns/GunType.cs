@@ -4,5 +4,5 @@
     {
         Projectile = 0,
         Laser = 1
-    };
+    }
 }

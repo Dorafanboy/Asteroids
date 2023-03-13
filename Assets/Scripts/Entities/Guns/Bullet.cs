@@ -8,17 +8,13 @@ namespace Entities.Guns
     {
         private readonly float _deceleration;
         private readonly IUpdatable _updatable;
-        public GunType Type { get; private set; }
         public GameObject Prefab { get; }
 
-        public Bullet(float deceleration, IUpdatable updatable, GameObject prefab, GunType type)
+        public Bullet(float deceleration, IUpdatable updatable, GameObject prefab)
         {
             _deceleration = deceleration;
             _updatable = updatable;
-            Prefab = prefab;
-            Type = type;
-
-            //Enable();
+            Prefab = prefab; 
         }
         
         public void Enable()

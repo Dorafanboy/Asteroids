@@ -13,8 +13,6 @@ namespace Entities.Guns
             _bullet = bullet;
             _view = view;
             _updatable = updatable;
-            
-            //Enable();
         }
 
         // public void Enable()

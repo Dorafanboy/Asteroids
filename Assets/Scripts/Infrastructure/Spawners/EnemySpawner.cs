@@ -18,8 +18,6 @@ namespace Infrastructure.Spawners
 
         private float _elapsedTime;
 
-        public event Action<EnemyEntityBase> Spawned;
-
         public EnemySpawner(Transform playerTransform, EnemySpawnerSettings settings, 
             SpawnPointsContainer spawnPoints, IUpdatable updatable, Camera camera, params Func<Transform, EnemyEntityBase>[] createObject)
         {
@@ -59,8 +57,6 @@ namespace Infrastructure.Spawners
             var spawnedObject = _pool.GetObject(_playerTransform);
             spawnedObject.Prefab.transform.position = trans;
             spawnedObject.Prefab.gameObject.SetActive(true);
-
-            Spawned?.Invoke(spawnedObject);
         }
 
         private Vector3 GetSpawnPosition()

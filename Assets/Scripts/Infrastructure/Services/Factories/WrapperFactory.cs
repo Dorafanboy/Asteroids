@@ -1,5 +1,4 @@
-﻿using System;
-using Entities.Ship;
+﻿using Entities.Ship;
 using Infrastructure.Services.Assets;
 using Infrastructure.Services.Containers;
 using Infrastructure.Wrapper;
@@ -11,9 +10,7 @@ namespace Infrastructure.Services.Factories
     {
         private readonly IUpdatable _updatable;
         private readonly Camera _camera;
-
-        public event Action<IEventListener> Spawned;
-
+        
         public WrapperFactory(IAssetProvider assetProvider, EventListenerContainer eventListenerContainer,
             IUpdatable updatable, Camera camera) : base(assetProvider, eventListenerContainer)
         {
@@ -26,8 +23,6 @@ namespace Infrastructure.Services.Factories
             var wrapper = new ScreenWrapper(_updatable, shipModel, _camera);
             EventListenerContainer.Register<IEventListener>(wrapper);
             
-            Spawned?.Invoke(wrapper);
-
             return wrapper;
         }
     }

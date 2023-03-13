@@ -14,8 +14,6 @@ namespace Infrastructure.Services.Factories
         private readonly IUpdatable _updatable;
         private readonly Camera _camera;
         
-        public event Action<IEventListener> Spawned;
-        
         public EnemyFactory(IAssetProvider assetProvider, EventListenerContainer eventListenerContainer, Camera camera,
             IUpdatable updatable) : base(assetProvider, eventListenerContainer)
         {
@@ -55,7 +53,6 @@ namespace Infrastructure.Services.Factories
         private void InvokeAction(EnemyEntityBase enemy)
         {
             EventListenerContainer.Register<IEventListener>(enemy);
-            Spawned?.Invoke(enemy);
         }
     }
 }

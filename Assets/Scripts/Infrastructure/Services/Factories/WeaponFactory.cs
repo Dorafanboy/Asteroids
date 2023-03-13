@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Constants;
-using Entities.Enemy;
 using Entities.Guns;
 using Entities.Pool;
 using Infrastructure.Services.Assets;
@@ -13,8 +12,8 @@ namespace Infrastructure.Services.Factories
     public class WeaponFactory : FactoryBase
     {
         private readonly IUpdatable _updatable;
-        private readonly Dictionary<GunType, BulletStaticData> _factories;
         private readonly Camera _camera;
+        private readonly Dictionary<GunType, BulletStaticData> _factories;
 
         public WeaponFactory(IAssetProvider assetProvider, EventListenerContainer eventListenerContainer,
             IUpdatable updatable, Camera camera) : base(assetProvider, eventListenerContainer)
@@ -31,7 +30,7 @@ namespace Infrastructure.Services.Factories
 
         public ProjectileWeapon CreateProjectileWeapon(GunType gunType)
         {
-            GetStats(out var pool, out var weaponData, AssetPath.Projectile);
+            GetStats(out var pool, out _, AssetPath.Projectile);
             var weapon = new ProjectileWeapon(pool, _updatable, gunType, _camera);
         
             return weapon;
@@ -62,7 +61,7 @@ namespace Infrastructure.Services.Factories
             var bulletPrefab = Object.Instantiate(bulletData.Prefab);
             bulletPrefab.SetActive(false);
 
-            var bullet = new Bullet(bulletData.Deceleration, _updatable, bulletPrefab, bulletData.GunType);
+            var bullet = new Bullet(bulletData.Deceleration, _updatable, bulletPrefab);
             
             var bulletView = new ProjectileView();
             var bulletPresenter = new ProjectilePresenter(bullet, bulletView, _updatable);
