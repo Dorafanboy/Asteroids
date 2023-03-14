@@ -58,10 +58,7 @@ namespace Infrastructure.States
                 _eventListenerContainer, _updatable, _diContainer.GetService<EnemyFactory>(), _camera));
             
             _diContainer.Register(new ShipFactory(_diContainer.GetService<IAssetProvider>(),
-                _eventListenerContainer, _diContainer.GetService<IInputService>()));
-            
-            _diContainer.Register(new WrapperFactory(_diContainer.GetService<IAssetProvider>(),
-                _eventListenerContainer, _updatable, _camera));
+                _eventListenerContainer, _diContainer.GetService<IInputService>(), _updatable, _camera));
         }
 
         private void OnSceneLoaded()

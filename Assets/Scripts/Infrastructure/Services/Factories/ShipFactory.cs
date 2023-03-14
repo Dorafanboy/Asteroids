@@ -4,6 +4,7 @@ using Entities.Ship;
 using Infrastructure.Services.Assets;
 using Infrastructure.Services.Containers;
 using Infrastructure.Services.Inputs;
+using Infrastructure.Wrapper;
 using StaticData;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -13,11 +14,15 @@ namespace Infrastructure.Services.Factories
     public class ShipFactory : FactoryBase
     {
         private readonly IInputService _inputService;
+        private readonly IUpdatable _updatable;
+        private readonly Camera _camera;
         
         public ShipFactory(IAssetProvider assetProvider, EventListenerContainer eventListenerContainer,
-            IInputService inputService) : base(assetProvider, eventListenerContainer)
+            IInputService inputService, IUpdatable updatable, Camera camera) : base(assetProvider, eventListenerContainer)
         {
             _inputService = inputService;
+            _updatable = updatable;
+            _camera = camera;
         }
 
         public ShipModel CreateShip<T, TT>(T firstWeapon, TT secondWeapon) where T : WeaponBase<Bullet> where TT : WeaponBase<Bullet>
@@ -30,8 +35,10 @@ namespace Infrastructure.Services.Factories
 
             var shipView = new ShipView(ship);
             var shipPresenter = new ShipPresenter(ship, shipView);
+            var wrapper = new ScreenWrapper(_updatable, _camera, shipView);
             
             EventListenerContainer.Register<IEventListener>(shipPresenter);
+            EventListenerContainer.Register<IEventListener>(wrapper);
 
             return ship;
         }

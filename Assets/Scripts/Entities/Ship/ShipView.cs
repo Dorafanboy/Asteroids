@@ -6,6 +6,8 @@ namespace Entities.Ship
     {
         private readonly ShipModel _shipModel;
 
+        public GameObject ShipPrefab => _shipModel.Prefab;
+
         public ShipView(ShipModel shipModel)
         {
             _shipModel = shipModel;
