@@ -6,34 +6,30 @@ using UnityEngine;
 
 namespace Infrastructure.Wrapper
 {
-    public class BulletScreenWrapper<T> : IUpdateListener where T : Bullet
+    public class BulletScreenWrapper<T> : WrapperBase where T : Bullet
     {
-        private readonly IUpdatable _updatable;
         private readonly ObjectPool<T> _objectPool;
-        private readonly Camera _camera;
         private readonly List<T> _bullets;
 
-        public BulletScreenWrapper(IUpdatable updatable, ObjectPool<T> objectPool, Camera camera)
+        public BulletScreenWrapper(IUpdatable updatable, Camera camera, ObjectPool<T> objectPool) : base(updatable, camera)
         {
-            _updatable = updatable;
             _objectPool = objectPool;
-            _camera = camera;
             _bullets = new List<T>();
         }
 
-        public void Enable()
+        public override void Enable()
         {
-            _updatable.Updated += OnUpdated;
+            base.Enable();
             _objectPool.Received += OnReceived;
         }
 
-        public void Disable()
+        public override void Disable()
         {
-            _updatable.Updated -= OnUpdated;
             _objectPool.Received -= OnReceived;
+            base.Disable();
         }
 
-        public void OnUpdated(float time)
+        public override void OnUpdated(float time)
         {
             foreach (var bullet in _bullets.ToList())
             {
@@ -48,18 +44,18 @@ namespace Infrastructure.Wrapper
             }
         }
 
-        private void OnReceived(T poolObject)
-        {
-            _bullets.Add(poolObject);
-        }
-
         private bool IsNeedReturn(Bullet bullet)
         {
             var position = bullet.Prefab.transform.position;
-            var viewportPosition = _camera.WorldToViewportPoint(position);
+            var viewportPosition = Camera.WorldToViewportPoint(position);
 
             return viewportPosition.x > 1 || viewportPosition.x < 0 ||
                     viewportPosition.y < 0 || viewportPosition.y > 1;
+        }
+
+        private void OnReceived(T poolObject)
+        {
+            _bullets.Add(poolObject);
         }
     }
 }

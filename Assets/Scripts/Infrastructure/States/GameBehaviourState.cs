@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Infrastructure.Services.Containers;
-using UnityEngine;
 
 namespace Infrastructure.States
 {
@@ -21,14 +20,12 @@ namespace Infrastructure.States
         public void Enter()
         {
             _updateListeners.Registered += OnRegistered;
-            
             EnableUpdateListeners();
         }
 
         public void Exit()
         {
             _updateListeners.Registered -= OnRegistered;
-
             DisableUpdateListeners();
         }
 

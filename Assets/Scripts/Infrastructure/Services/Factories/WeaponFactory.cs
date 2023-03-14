@@ -53,7 +53,7 @@ namespace Infrastructure.Services.Factories
             weaponData = AssetProvider.GetData<BulletStaticData>(path);
         
             pool = new ObjectPool<Bullet>(poolData.PoolSize, CreateBullet<Bullet>);           
-            var wrapper = new BulletScreenWrapper<Bullet>(_updatable, pool, _camera);
+            var wrapper = new BulletScreenWrapper<Bullet>(_updatable, _camera, pool);
             
             EventListenerContainer.Register<IEventListener>(wrapper);
         }

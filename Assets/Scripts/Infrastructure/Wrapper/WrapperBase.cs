@@ -2,15 +2,32 @@
 
 namespace Infrastructure.Wrapper
 {
-    public abstract class WrapperBase
+    public abstract class WrapperBase : IUpdateListener
     {
-        protected IUpdatable Updatable { get; }
+        private readonly IUpdatable _updatable;
         protected Camera Camera { get; }
 
-        public WrapperBase(IUpdatable updatable, Camera camera)
+        protected WrapperBase(IUpdatable updatable, Camera camera)
         {
-            Updatable = updatable;
+            _updatable = updatable;
             Camera = camera;
+        }
+
+        public virtual void Enable()
+        {
+            _updatable.Updated += OnUpdated;
+        }
+
+        public virtual void Disable()
+        {
+            _updatable.Updated -= OnUpdated;
+        }
+
+        public abstract void OnUpdated(float time);
+
+        protected float GetWrapPosition(float viewportPosition, float newPosition)
+        {
+            return viewportPosition > 1 || viewportPosition < 0 ? -newPosition : newPosition;
         }
     }
 }
