@@ -9,52 +9,48 @@ namespace Infrastructure.Wrapper
     public class BulletScreenWrapper<T> : IUpdateListener where T : Bullet
     {
         private readonly IUpdatable _updatable;
-        private readonly List<T> _projectiles;
         private readonly ObjectPool<T> _objectPool;
         private readonly Camera _camera;
-        private readonly IWeapon<T> _weapon;
+        private readonly List<T> _bullets;
 
-        public BulletScreenWrapper(IUpdatable updatable, ObjectPool<T> objectPool, IWeapon<T> weapon, Camera camera)
+        public BulletScreenWrapper(IUpdatable updatable, ObjectPool<T> objectPool, Camera camera)
         {
             _updatable = updatable;
-            _projectiles = new List<T>();
             _objectPool = objectPool;
-            _weapon = weapon;
             _camera = camera;
-
-            Enable();
+            _bullets = new List<T>();
         }
 
         public void Enable()
         {
             _updatable.Updated += OnUpdated;
-            _weapon.Fired += OnFired;
+            _objectPool.Received += OnReceived;
         }
 
         public void Disable()
         {
             _updatable.Updated -= OnUpdated;
-            _weapon.Fired -= OnFired;
+            _objectPool.Received -= OnReceived;
         }
 
         public void OnUpdated(float time)
         {
-            if (_projectiles == null)
+            foreach (var bullet in _bullets.ToList())
             {
-                return;
-            }
-
-            foreach (var proj in _projectiles.ToList())
-            {
-                if (IsNeedReturn(proj))
+                if (IsNeedReturn(bullet))
                 {
-                    proj.Prefab.SetActive(false);
+                    bullet.Prefab.SetActive(false);
 
-                    _objectPool.ReturnObject(proj);
+                    _objectPool.ReturnObject(bullet);
 
-                    _projectiles.Remove(proj);
+                    _bullets.Remove(bullet);
                 }
             }
+        }
+
+        private void OnReceived(T poolObject)
+        {
+            _bullets.Add(poolObject);
         }
 
         private bool IsNeedReturn(Bullet bullet)
@@ -62,13 +58,8 @@ namespace Infrastructure.Wrapper
             var position = bullet.Prefab.transform.position;
             var viewportPosition = _camera.WorldToViewportPoint(position);
 
-            return (viewportPosition.x > 1 || viewportPosition.x < 0 ||
-                    viewportPosition.y < 0 || viewportPosition.y > 1);
-        }
-
-        private void OnFired(Bullet bullet)
-        {
-            _projectiles.Add((T)bullet);
+            return viewportPosition.x > 1 || viewportPosition.x < 0 ||
+                    viewportPosition.y < 0 || viewportPosition.y > 1;
         }
     }
 }

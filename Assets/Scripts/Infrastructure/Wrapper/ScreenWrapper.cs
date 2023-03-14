@@ -13,7 +13,7 @@ namespace Infrastructure.Wrapper
         {
             _updatable = updatable;
             _shipModel = shipModel;
-            _camera = camera; // камеру через констурктор передать
+            _camera = camera; 
         }
 
         public void Enable()

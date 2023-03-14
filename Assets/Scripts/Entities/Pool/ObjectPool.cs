@@ -14,6 +14,8 @@ namespace Entities.Pool
         private readonly Queue<T> _pool;
         private readonly ITest _test;
 
+        public event Action<T> Received;
+
         public ObjectPool(int poolSize, params Func<GunType, T>[] createObject)
         {
             _poolSize = poolSize;
@@ -34,7 +36,10 @@ namespace Entities.Pool
                 }
             }
 
-            return _pool.Dequeue();
+            var element = _pool.Dequeue();
+            Received?.Invoke(element);
+
+            return element;
         }
         
         public void ReturnObject(T obj)

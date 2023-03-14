@@ -12,7 +12,7 @@ namespace Entities.Guns
         private int _remainingShots;
     
         public LaserWeapon(ObjectPool<Bullet> objectPool, IUpdatable updatable, GunType gunType, float bulletCooldown,
-            Camera camera) : base(objectPool, updatable, gunType, camera)
+            Camera camera) : base(objectPool, gunType)
         {
             _updatable = updatable; 
             _bulletCooldown = bulletCooldown;

@@ -4,6 +4,7 @@ using Entities.Guns;
 using Entities.Pool;
 using Infrastructure.Services.Assets;
 using Infrastructure.Services.Containers;
+using Infrastructure.Wrapper;
 using StaticData;
 using UnityEngine;
 
@@ -51,7 +52,10 @@ namespace Infrastructure.Services.Factories
             var poolData = AssetProvider.GetData<PoolStaticData>(AssetPath.PoolPath);
             weaponData = AssetProvider.GetData<BulletStaticData>(path);
         
-            pool = new ObjectPool<Bullet>(poolData.PoolSize, CreateBullet<Bullet>);
+            pool = new ObjectPool<Bullet>(poolData.PoolSize, CreateBullet<Bullet>);           
+            var wrapper = new BulletScreenWrapper<Bullet>(_updatable, pool, _camera);
+            
+            EventListenerContainer.Register<IEventListener>(wrapper);
         }
 
         private T CreateBullet<T>(GunType gunType) where T : Bullet         //TODO: переделать presenter под MVP

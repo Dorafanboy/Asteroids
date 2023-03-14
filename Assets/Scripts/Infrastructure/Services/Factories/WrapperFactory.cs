@@ -1,7 +1,11 @@
-﻿using Entities.Ship;
+﻿using Constants;
+using Entities.Guns;
+using Entities.Pool;
+using Entities.Ship;
 using Infrastructure.Services.Assets;
 using Infrastructure.Services.Containers;
 using Infrastructure.Wrapper;
+using StaticData;
 using UnityEngine;
 
 namespace Infrastructure.Services.Factories
@@ -10,7 +14,7 @@ namespace Infrastructure.Services.Factories
     {
         private readonly IUpdatable _updatable;
         private readonly Camera _camera;
-        
+
         public WrapperFactory(IAssetProvider assetProvider, EventListenerContainer eventListenerContainer,
             IUpdatable updatable, Camera camera) : base(assetProvider, eventListenerContainer)
         {

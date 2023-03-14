@@ -27,20 +27,20 @@ namespace Infrastructure.States
         {
             var firstWeapon = _weaponFactory.CreateProjectileWeapon(GunType.Projectile);
             var secondWeapon = _weaponFactory.CreateLaserWeapon(GunType.Laser); 
-            var ship = SpawnShip(firstWeapon, secondWeapon); 
-            var wrapper = CreateWrapper(ship);
+            var ship = SpawnShip(firstWeapon, secondWeapon); //WTF
+            var wrapper = CreateWrapper(ship); //WTF
             var enemySpawner = _spawnerFactory.CreateEnemySpawner(ship.Prefab.transform);
             
             _stateMachine.Enter<GameBehaviourState>();
         }
 
+        public void Exit()
+        {
+        }
+
         private ShipModel SpawnShip<T, TT>(T firstWeapon, TT secondWeapon) where T : WeaponBase<Bullet> where TT : WeaponBase<Bullet>
         {
             return _shipFactory.CreateShip(firstWeapon, secondWeapon);
-        }
-
-        public void Exit()
-        {
         }
 
         private ScreenWrapper CreateWrapper(ShipModel shipModel)
