@@ -31,26 +31,17 @@ namespace Infrastructure.Wrapper
 
         public override void OnUpdated(float time)
         {
-            foreach (var bullet in _bullets.ToList())
+            for (int i = 0; i < _bullets.ToList().Count; i++)
             {
-                if (IsNeedReturn(bullet))
+                if (IsNeedWrap(_bullets[i]))
                 {
-                    bullet.Prefab.SetActive(false);
+                    _bullets[i].Prefab.SetActive(false);
 
-                    _objectPool.ReturnObject(bullet);
+                    _objectPool.ReturnObject(_bullets[i]);
 
-                    _bullets.Remove(bullet);
+                    _bullets.Remove(_bullets[i]);
                 }
             }
-        }
-
-        private bool IsNeedReturn(Bullet bullet)
-        {
-            var position = bullet.Prefab.transform.position;
-            var viewportPosition = Camera.WorldToViewportPoint(position);
-
-            return viewportPosition.x > 1 || viewportPosition.x < 0 ||
-                    viewportPosition.y < 0 || viewportPosition.y > 1;
         }
 
         private void OnReceived(T poolObject)

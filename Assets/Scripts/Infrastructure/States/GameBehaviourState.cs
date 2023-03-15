@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Infrastructure.Services.Containers;
+﻿using Infrastructure.Services.Containers;
 
 namespace Infrastructure.States
 {
@@ -7,13 +6,11 @@ namespace Infrastructure.States
     {
         private readonly IStateMachine _stateMachine;
         private readonly EventListenerContainer _updateListeners;
-        private readonly List<IEventListener> _listeners;
 
         public GameBehaviourState(IStateMachine stateMachine, EventListenerContainer updateListeners)
         {
             _stateMachine = stateMachine;
             _updateListeners = updateListeners;
-            _listeners = _updateListeners.Lesten; 
             //TODO: сделать потом переход из этого стейта, при рестарте там, спмерти и тд
         }
         
@@ -31,23 +28,22 @@ namespace Infrastructure.States
 
         private void OnRegistered(IEventListener product)
         {
-            _listeners.Add(product);
             product.Enable();
         }
 
         private void EnableUpdateListeners()
         {
-            foreach (var listener in _updateListeners.Lesten)
+            for (int i = 0; i < _updateListeners.Listeners.Count; i++)
             {
-                listener.Enable();
+                _updateListeners.Listeners[i].Enable();
             }
         }
         
         private void DisableUpdateListeners()
         {
-            foreach (var listener in _updateListeners.Lesten)
+            for (int i = 0; i < _updateListeners.Listeners.Count; i++)
             {
-                listener.Disable();
+                _updateListeners.Listeners[i].Disable();
             }
         }
     }

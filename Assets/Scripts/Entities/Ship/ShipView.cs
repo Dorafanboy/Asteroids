@@ -1,16 +1,17 @@
-﻿using UnityEngine;
+﻿using Entities.Guns;
+using UnityEngine;
 
 namespace Entities.Ship
 {
-    public class ShipView
+    public class ShipView : ITransformable
     {
-        private readonly ShipModel _shipModel;
-
-        public GameObject ShipPrefab => _shipModel.Prefab;
+        private readonly ShipModel _shipModel; //TODO: избавиться от модели отсюда, сделать install angle from presenter
+        public GameObject Prefab { get; }
 
         public ShipView(ShipModel shipModel)
         {
             _shipModel = shipModel;
+            Prefab = _shipModel.Prefab;
         }
 
         public void InstallPosition(Vector3 position)

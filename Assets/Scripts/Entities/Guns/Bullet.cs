@@ -1,10 +1,9 @@
-﻿using Entities.Pool;
-using Infrastructure;
+﻿using Infrastructure;
 using UnityEngine;
 
 namespace Entities.Guns
 {
-    public class Bullet : IPoolProduct, IUpdateListener
+    public class Bullet : IUpdateListener, ITransformable
     {
         private readonly float _deceleration;
         private readonly IUpdatable _updatable;
@@ -29,7 +28,13 @@ namespace Entities.Guns
 
         public void OnUpdated(float time)
         {
-            Prefab.transform.position += time * Prefab.transform.up * _deceleration;
+            var position = Prefab.transform.position + time * Prefab.transform.up * _deceleration;
+            InstallPosition(position);
+        }
+
+        public void InstallPosition(Vector3 position)
+        {
+            Prefab.transform.position = position;
         }
     }
 }

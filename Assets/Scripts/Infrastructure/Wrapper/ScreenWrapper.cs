@@ -1,27 +1,26 @@
-﻿using Entities.Ship;
+﻿using Entities.Guns;
 using UnityEngine;
 
 namespace Infrastructure.Wrapper
 {
     public class ScreenWrapper : WrapperBase 
     {
-        private readonly ShipView _shipView;
+        private readonly ITransformable _transformable;
         
-        public ScreenWrapper(IUpdatable updatable, Camera camera, ShipView shipView) : base(updatable, camera)
+        public ScreenWrapper(IUpdatable updatable, Camera camera, ITransformable transformable) : base(updatable, camera)
         {
-            _shipView = shipView;
+            _transformable = transformable;
         }
-        
+
         public override void OnUpdated(float time)
         {
-            var position = _shipView.ShipPrefab.transform.position;
-            var viewportPosition = Camera.WorldToViewportPoint(position);
-            var newPosition = position;
+            var viewportPosition = GetViewportPoint(_transformable);
+            var newPosition = _transformable.Prefab.transform.position;
 
             newPosition.x = GetWrapPosition(viewportPosition.x, newPosition.x);
             newPosition.y = GetWrapPosition(viewportPosition.y, newPosition.y);
         
-            _shipView.InstallPosition(newPosition); // install position in view
+            _transformable.InstallPosition(newPosition); 
         }
     }
 }

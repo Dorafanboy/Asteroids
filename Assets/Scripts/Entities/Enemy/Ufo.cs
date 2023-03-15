@@ -14,8 +14,10 @@ namespace Entities.Enemy
 
         public override void OnUpdated(float time)
         {
-            Prefab.gameObject.transform.position = Vector3.MoveTowards(Prefab.gameObject.transform.position,
+            var nextPosition = Vector3.MoveTowards(Prefab.gameObject.transform.position,
                 _playerShip.transform.position, time * Speed);
+            
+           InstallPosition(nextPosition); 
         }
     }
 }

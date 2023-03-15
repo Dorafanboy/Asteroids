@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Entities.Guns;
-using Entities.Pool;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Entities.Pool
 {
-    public class ObjectPool<T> where T : IPoolProduct
+    public class ObjectPool<T> where T : ITransformable
     {
         private readonly int _poolSize;
         private readonly Func<GunType, T>[] _createObject;
@@ -87,7 +86,7 @@ public interface ITest
 //     }
 // }
 
-public class EnemyObjectPool<T> where T : IPoolProduct
+public class EnemyObjectPool<T> where T : ITransformable
 {
     private readonly int _poolSize;
     private readonly Func<Transform, T>[] _createObject;
