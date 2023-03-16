@@ -11,7 +11,8 @@ namespace Infrastructure.Wrapper
         private readonly ObjectPool<T> _objectPool;
         private readonly List<T> _bullets;
 
-        public BulletScreenWrapper(IUpdatable updatable, Camera camera, ObjectPool<T> objectPool) : base(updatable, camera)
+        public BulletScreenWrapper(IUpdatable updatable, Camera camera, ObjectPool<T> objectPool) 
+            : base(updatable, camera)
         {
             _objectPool = objectPool;
             _bullets = new List<T>();

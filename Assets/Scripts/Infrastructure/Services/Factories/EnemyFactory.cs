@@ -1,5 +1,4 @@
-﻿using System;
-using Constants;
+﻿using Constants;
 using Entities.Enemy;
 using Infrastructure.Services.Assets;
 using Infrastructure.Services.Containers;

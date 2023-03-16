@@ -32,7 +32,7 @@ namespace Infrastructure.Services.Factories
         public ProjectileWeapon CreateProjectileWeapon(GunType gunType)
         {
             GetStats(out var pool, out _, AssetPath.Projectile);
-            var weapon = new ProjectileWeapon(pool, _updatable, gunType, _camera);
+            var weapon = new ProjectileWeapon(pool, gunType);
         
             return weapon;
         }
@@ -40,7 +40,7 @@ namespace Infrastructure.Services.Factories
         public LaserWeapon CreateLaserWeapon(GunType gunType)
         {
             GetStats(out var pool, out var weaponData, AssetPath.Laser);
-            var weapon = new LaserWeapon(pool, _updatable, gunType, weaponData.FireCooldown, _camera);
+            var weapon = new LaserWeapon(pool, _updatable, gunType, weaponData.FireCooldown);
             
             EventListenerContainer.Register<IEventListener>(weapon);
         

@@ -1,5 +1,6 @@
 ﻿using System;
 using Entities.Enemy;
+using Entities.Pool;
 using Infrastructure.Spawners.SpawnPoints;
 using StaticData.Settings;
 using UnityEngine;
@@ -18,8 +19,8 @@ namespace Infrastructure.Spawners
 
         private float _elapsedTime;
 
-        public EnemySpawner(Transform playerTransform, EnemySpawnerSettings settings, 
-            SpawnPointsContainer spawnPoints, IUpdatable updatable, Camera camera, params Func<Transform, EnemyEntityBase>[] createObject)
+        public EnemySpawner(Transform playerTransform, EnemySpawnerSettings settings, SpawnPointsContainer spawnPoints, 
+            IUpdatable updatable, Camera camera, params Func<Transform, EnemyEntityBase>[] createObject)
         {
             _pool = new EnemyObjectPool<EnemyEntityBase>(settings.EnemyCount, createObject);
             _playerTransform = playerTransform;
