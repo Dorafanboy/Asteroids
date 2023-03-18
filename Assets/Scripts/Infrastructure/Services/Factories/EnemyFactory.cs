@@ -1,6 +1,7 @@
 ﻿using Constants;
 using Entities.Enemy;
 using Infrastructure.Services.Assets;
+using Infrastructure.Services.Clashes;
 using Infrastructure.Services.Containers;
 using StaticData;
 using UnityEngine;
@@ -14,7 +15,8 @@ namespace Infrastructure.Services.Factories
         private readonly Camera _camera;
         
         public EnemyFactory(IAssetProvider assetProvider, EventListenerContainer eventListenerContainer, Camera camera,
-            IUpdatable updatable) : base(assetProvider, eventListenerContainer)
+            IUpdatable updatable, TransformableContainer transformableContainer) 
+            : base(assetProvider, eventListenerContainer, transformableContainer)
         {
             _updatable = updatable;
             _camera = camera;
@@ -52,6 +54,7 @@ namespace Infrastructure.Services.Factories
         private void InvokeAction(EnemyEntityBase enemy)
         {
             EventListenerContainer.Register<IEventListener>(enemy);
+            TransformableContainer.Register(enemy.Prefab.GetComponent<CollisionChecker>());
         }
     }
 }

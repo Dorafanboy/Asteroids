@@ -7,11 +7,14 @@ namespace Infrastructure.Services.Factories
     {
         protected IAssetProvider AssetProvider { get; }
         protected EventListenerContainer EventListenerContainer { get; }
+        protected TransformableContainer TransformableContainer { get; }
 
-        protected FactoryBase(IAssetProvider assetProvider, EventListenerContainer eventListenerContainer)
+        protected FactoryBase(IAssetProvider assetProvider, EventListenerContainer eventListenerContainer, 
+            TransformableContainer transformableContainer)
         {
             AssetProvider = assetProvider;
             EventListenerContainer = eventListenerContainer;
+            TransformableContainer = transformableContainer;
         }
     }
 }

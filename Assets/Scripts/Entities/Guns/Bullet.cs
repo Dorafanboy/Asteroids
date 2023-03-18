@@ -15,7 +15,7 @@ namespace Entities.Guns
             _updatable = updatable;
             Prefab = prefab; 
         }
-        
+
         public void Enable()
         {
             _updatable.Updated += OnUpdated;
@@ -24,6 +24,13 @@ namespace Entities.Guns
         public void Disable()
         {
             _updatable.Updated -= OnUpdated;
+
+        }
+
+        public void DisableObject()
+        {
+            Debug.Log("DDiable");
+
         }
 
         public void OnUpdated(float time)

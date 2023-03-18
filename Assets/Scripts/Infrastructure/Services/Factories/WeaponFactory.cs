@@ -3,6 +3,7 @@ using Constants;
 using Entities.Guns;
 using Entities.Pool;
 using Infrastructure.Services.Assets;
+using Infrastructure.Services.Clashes;
 using Infrastructure.Services.Containers;
 using Infrastructure.Wrapper;
 using StaticData;
@@ -17,7 +18,8 @@ namespace Infrastructure.Services.Factories
         private readonly Dictionary<GunType, BulletStaticData> _factories;
 
         public WeaponFactory(IAssetProvider assetProvider, EventListenerContainer eventListenerContainer,
-            IUpdatable updatable, Camera camera) : base(assetProvider, eventListenerContainer)
+            IUpdatable updatable, Camera camera, TransformableContainer transformableContainer) 
+            : base(assetProvider, eventListenerContainer, transformableContainer)
         {
             _updatable = updatable;
             _camera = camera;
@@ -33,7 +35,7 @@ namespace Infrastructure.Services.Factories
         {
             GetStats(out var pool, out _, AssetPath.Projectile);
             var weapon = new ProjectileWeapon(pool, gunType);
-        
+            
             return weapon;
         }
 
@@ -47,7 +49,7 @@ namespace Infrastructure.Services.Factories
             return weapon;
         }
 
-        private void GetStats(out ObjectPool<Bullet> pool, out BulletStaticData weaponData, string path) //TODO: гантайп не нужен будет
+        private void GetStats(out ObjectPool<Bullet> pool, out BulletStaticData weaponData, string path)
         {
             var poolData = AssetProvider.GetData<PoolStaticData>(AssetPath.PoolPath);
             weaponData = AssetProvider.GetData<BulletStaticData>(path);
@@ -71,6 +73,7 @@ namespace Infrastructure.Services.Factories
             var bulletPresenter = new ProjectilePresenter(bullet, bulletView, _updatable);
 
             EventListenerContainer.Register<IEventListener>(bullet);
+            TransformableContainer.Register(bullet.Prefab.GetComponent<CollisionChecker>());
 
             return bullet as T;
         }

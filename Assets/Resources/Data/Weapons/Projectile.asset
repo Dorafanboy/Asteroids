@@ -15,3 +15,4 @@ MonoBehaviour:
   _gunType: 0
   _prefab: {fileID: 4592819619283123267, guid: f4b877aaa59443647b131a4654b3c13e, type: 3}
   _deceleration: 10
+  _fireCooldown: 0

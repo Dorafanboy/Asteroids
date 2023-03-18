@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Asteroid
   m_EditorClassIdentifier: 
   _prefab: {fileID: 4068503875740806560, guid: fac816af1775805489537d212954b5c6, type: 3}
-  _speed: 1
+  _speed: 0.2

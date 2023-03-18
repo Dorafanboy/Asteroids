@@ -28,6 +28,11 @@ namespace Entities.Enemy
             _updatable.Updated -= OnUpdated;
         }
 
+        public void DisableObject()
+        {
+            Debug.Log("Disable");
+        }
+
         public void InstallPosition(Vector3 position)
         {
             Prefab.transform.position = position;

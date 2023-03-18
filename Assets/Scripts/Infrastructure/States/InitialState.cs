@@ -27,7 +27,7 @@ namespace Infrastructure.States
             var secondWeapon = _weaponFactory.CreateLaserWeapon(GunType.Laser); 
             var ship = SpawnShip(firstWeapon, secondWeapon); //WTF
             var enemySpawner = _spawnerFactory.CreateEnemySpawner(ship.Prefab.transform);
-            
+
             _stateMachine.Enter<GameBehaviourState>();
         }
 

@@ -19,6 +19,11 @@ namespace Entities.Ship
             _shipModel.Prefab.transform.position = position;
         }
 
+        public void DisableObject()
+        {
+            Debug.Log("Disabled");
+        }
+
         public void InstallAngleRotation(float angle)
         {
             _shipModel.Prefab.transform.rotation = Quaternion.Lerp(_shipModel.Prefab.transform.rotation,

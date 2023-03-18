@@ -17,14 +17,15 @@ namespace Infrastructure.States
         {
             _diContainer = container;
             var cont = new EventListenerContainer();
+            var transform = new TransformableContainer();
             var camera = Camera.main;
             
             _states = new Dictionary<Type, IState>
             {
-                [typeof(BootstrapState)] = new BootstrapState(this, _diContainer, sceneLoader, updatable, cont, camera),
+                [typeof(BootstrapState)] = new BootstrapState(this, _diContainer, sceneLoader, updatable, cont, camera, transform),
                 [typeof(LoadLevelState)] = new LoadLevelState(this, sceneLoader),
                 [typeof(InitialState)] = new InitialState(this, _diContainer),
-                [typeof(GameBehaviourState)] = new GameBehaviourState(this, cont)
+                [typeof(GameBehaviourState)] = new GameBehaviourState(this, cont, transform)
             };
         }
     

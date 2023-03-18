@@ -16,7 +16,8 @@ namespace Infrastructure.Services.Factories
         private readonly Camera _camera;
 
         public SpawnerFactory(IAssetProvider assetProvider, EventListenerContainer eventListenerContainer,
-            IUpdatable updatable, EnemyFactory enemyFactory, Camera camera) : base(assetProvider, eventListenerContainer)
+            IUpdatable updatable, EnemyFactory enemyFactory, Camera camera, TransformableContainer transformableContainer) 
+            : base(assetProvider, eventListenerContainer, transformableContainer)
         {
             _updatable = updatable;
             _enemyFactory = enemyFactory;
