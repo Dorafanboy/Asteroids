@@ -44,7 +44,7 @@ namespace Infrastructure.Services.Factories
             EventListenerContainer.Register<IEventListener>(wrapper);
             EventListenerContainer.Register<IEventListener>(collision);
             
-            TransformableContainer.Register(ship.Prefab.GetComponent<CollisionChecker>());
+            TransformableContainer.RegisterObject(shipView.Prefab.GetComponent<CollisionChecker>(), shipView);
 
             return ship;
         }

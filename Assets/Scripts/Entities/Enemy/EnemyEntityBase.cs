@@ -1,4 +1,5 @@
-﻿using Entities.Guns;
+﻿using System;
+using Entities.Guns;
 using Infrastructure;
 using UnityEngine;
 
@@ -30,8 +31,10 @@ namespace Entities.Enemy
 
         public void DisableObject()
         {
-            Debug.Log("Disable");
+            Collided?.Invoke(this);
         }
+
+        public event Action<ITransformable> Collided;
 
         public void InstallPosition(Vector3 position)
         {

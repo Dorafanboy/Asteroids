@@ -1,4 +1,5 @@
-﻿using Infrastructure.Services;
+﻿using System;
+using Infrastructure.Services;
 using UnityEngine;
 
 namespace Entities.Guns
@@ -8,5 +9,6 @@ namespace Entities.Guns
         GameObject Prefab { get; }
         void InstallPosition(Vector3 position);
         void DisableObject();
+        event Action<ITransformable> Collided;
     }
 }

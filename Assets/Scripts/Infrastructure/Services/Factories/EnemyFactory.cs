@@ -54,7 +54,7 @@ namespace Infrastructure.Services.Factories
         private void InvokeAction(EnemyEntityBase enemy)
         {
             EventListenerContainer.Register<IEventListener>(enemy);
-            TransformableContainer.Register(enemy.Prefab.GetComponent<CollisionChecker>());
+            TransformableContainer.RegisterObject(enemy.Prefab.GetComponent<CollisionChecker>(), enemy);
         }
     }
 }

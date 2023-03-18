@@ -1,4 +1,5 @@
-﻿using Entities.Guns;
+﻿using System;
+using Entities.Guns;
 using UnityEngine;
 
 namespace Entities.Ship
@@ -21,8 +22,10 @@ namespace Entities.Ship
 
         public void DisableObject()
         {
-            Debug.Log("Disabled");
+            Collided?.Invoke(this);
         }
+
+        public event Action<ITransformable> Collided;
 
         public void InstallAngleRotation(float angle)
         {

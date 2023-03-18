@@ -1,4 +1,5 @@
-﻿using Infrastructure;
+﻿using System;
+using Infrastructure;
 using UnityEngine;
 
 namespace Entities.Guns
@@ -8,6 +9,7 @@ namespace Entities.Guns
         private readonly float _deceleration;
         private readonly IUpdatable _updatable;
         public GameObject Prefab { get; }
+        public event Action<ITransformable> Collided;
 
         public Bullet(float deceleration, IUpdatable updatable, GameObject prefab)
         {
@@ -24,13 +26,11 @@ namespace Entities.Guns
         public void Disable()
         {
             _updatable.Updated -= OnUpdated;
-
         }
 
         public void DisableObject()
         {
-            Debug.Log("DDiable");
-
+            Collided?.Invoke(this);
         }
 
         public void OnUpdated(float time)

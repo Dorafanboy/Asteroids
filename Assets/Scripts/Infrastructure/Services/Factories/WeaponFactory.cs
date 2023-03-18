@@ -73,7 +73,7 @@ namespace Infrastructure.Services.Factories
             var bulletPresenter = new ProjectilePresenter(bullet, bulletView, _updatable);
 
             EventListenerContainer.Register<IEventListener>(bullet);
-            TransformableContainer.Register(bullet.Prefab.GetComponent<CollisionChecker>());
+            TransformableContainer.RegisterObject(bullet.Prefab.GetComponent<CollisionChecker>(), bullet);
 
             return bullet as T;
         }

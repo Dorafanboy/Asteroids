@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Entities.Guns;
-using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Entities.Pool
@@ -27,17 +26,27 @@ namespace Entities.Pool
                 {
                     var idx = Random.Range(0, _createObject.Length);
                     var randomFunc = _createObject[idx];
-                
+
                     _pool.Enqueue(randomFunc(type));
                 }
             }
-    
-            return _pool.Dequeue();
+
+            var element = _pool.Dequeue();
+            element.Collided += OnCollided;
+
+            return element;
         }
-        
+
         public void ReturnObject(T obj)
         {
+            obj.Collided -= OnCollided;
             _pool.Enqueue(obj);
+        }
+
+        private void OnCollided(ITransformable obj)
+        {
+            obj.Prefab.SetActive(false);
+            _pool.Enqueue((T)obj);
         }
     }
 }

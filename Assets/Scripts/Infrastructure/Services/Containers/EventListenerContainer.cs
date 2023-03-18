@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Entities.Guns;
 using Infrastructure.Services;
 using Infrastructure.Services.Clashes;
 
@@ -27,20 +28,24 @@ namespace Infrastructure.Services.Containers
 
 public class TransformableContainer : IContainer<CollisionChecker>
 {
-    private readonly List<CollisionChecker> _listeners;
-    public IReadOnlyList<CollisionChecker> Listeners => _listeners;
-    public event Action<CollisionChecker> Registered;
+    private readonly List<CollisionActors> _listeners;
+    public IReadOnlyList<CollisionActors> Listeners => _listeners;
+    public event Action<CollisionActors> Registered;
 
     public TransformableContainer()
     {
-        _listeners = new List<CollisionChecker>();
+        _listeners = new List<CollisionActors>();
     }
 
     public void Register<TService>(TService service) where TService : IService
     {
-        _listeners.Add(service as CollisionChecker);
-
-        Registered?.Invoke(service as CollisionChecker);
+    }
+    
+    public void RegisterObject(CollisionChecker checker, ITransformable transformable)
+    {
+        _listeners.Add(new CollisionActors(checker, transformable));
+        
+        Registered?.Invoke(new CollisionActors(checker, transformable));
     }
 }
 
