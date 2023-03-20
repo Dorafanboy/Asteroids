@@ -1,5 +1,6 @@
 ﻿using System;
 using Entities.Guns;
+using Infrastructure.Services.Clashes;
 using UnityEngine;
 
 namespace Entities.Ship
@@ -23,6 +24,7 @@ namespace Entities.Ship
         public void DisableObject()
         {
             Collided?.Invoke(this);
+            Prefab.SetActive(false);
         }
 
         public event Action<ITransformable> Collided;

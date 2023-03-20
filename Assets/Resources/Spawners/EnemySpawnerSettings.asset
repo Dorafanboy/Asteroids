@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: EnemySpawnerSettings
   m_EditorClassIdentifier: 
   _spawnDelay: 3
-  _enemyCount: 10
+  _enemyCount: 20
   _sideCount: 4

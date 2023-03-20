@@ -27,7 +27,7 @@ namespace Infrastructure.Services.Factories
             var ufoPrefab = GetEnemyPrefab(out var data, AssetPath.Ufo);
             var ufo = new Ufo(ufoPrefab, data.Speed, playerShip, _updatable);
 
-            InvokeAction(ufo);
+            InvokeAction(ufo, CollisionType.Ufo);
 
             return ufo;
         }
@@ -37,7 +37,7 @@ namespace Infrastructure.Services.Factories
             var asteroidPrefab = GetEnemyPrefab(out var data, AssetPath.Asteroid);
             var asteroid = new Asteroid(asteroidPrefab, data.Speed, _updatable, _camera);
             
-            InvokeAction(asteroid);
+            InvokeAction(asteroid, CollisionType.Asteroid);
 
             return asteroid;
         }
@@ -51,10 +51,10 @@ namespace Infrastructure.Services.Factories
             return asteroidPrefab;
         }
 
-        private void InvokeAction(EnemyEntityBase enemy)
+        private void InvokeAction(EnemyEntityBase enemy, CollisionType type)
         {
             EventListenerContainer.Register<IEventListener>(enemy);
-            TransformableContainer.RegisterObject(enemy.Prefab.GetComponent<CollisionChecker>(), enemy);
+            TransformableContainer.RegisterObject(enemy.Prefab.GetComponent<CollisionChecker>(), enemy, type);
         }
     }
 }

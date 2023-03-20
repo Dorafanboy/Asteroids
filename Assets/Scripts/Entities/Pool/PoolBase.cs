@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Entities.Guns;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Entities.Pool
@@ -46,7 +47,7 @@ namespace Entities.Pool
         private void OnCollided(ITransformable obj)
         {
             obj.Prefab.SetActive(false);
-            _pool.Enqueue((T)obj);
+            ReturnObject((T)obj);
         }
     }
 }

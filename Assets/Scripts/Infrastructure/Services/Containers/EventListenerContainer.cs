@@ -41,11 +41,11 @@ public class TransformableContainer : IContainer<CollisionChecker>
     {
     }
     
-    public void RegisterObject(CollisionChecker checker, ITransformable transformable)
+    public void RegisterObject(CollisionChecker checker, ITransformable transformable, CollisionType type)
     {
-        _listeners.Add(new CollisionActors(checker, transformable));
+        _listeners.Add(new CollisionActors(checker, transformable, type));
         
-        Registered?.Invoke(new CollisionActors(checker, transformable));
+        Registered?.Invoke(new CollisionActors(checker, transformable, type));
     }
 }
 

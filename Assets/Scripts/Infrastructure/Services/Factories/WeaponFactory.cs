@@ -15,7 +15,7 @@ namespace Infrastructure.Services.Factories
     {
         private readonly IUpdatable _updatable;
         private readonly Camera _camera;
-        private readonly Dictionary<GunType, BulletStaticData> _factories;
+        private readonly Dictionary<BulletType, BulletStaticData> _factories;
 
         public WeaponFactory(IAssetProvider assetProvider, EventListenerContainer eventListenerContainer,
             IUpdatable updatable, Camera camera, TransformableContainer transformableContainer) 
@@ -24,25 +24,25 @@ namespace Infrastructure.Services.Factories
             _updatable = updatable;
             _camera = camera;
 
-            _factories = new Dictionary<GunType, BulletStaticData>
+            _factories = new Dictionary<BulletType, BulletStaticData>
             {
-                { GunType.Laser, AssetProvider.GetData<BulletStaticData>(AssetPath.Laser) },
-                { GunType.Projectile, AssetProvider.GetData<BulletStaticData>(AssetPath.Projectile) },
+                { BulletType.Laser, AssetProvider.GetData<BulletStaticData>(AssetPath.Laser) },
+                { BulletType.Projectile, AssetProvider.GetData<BulletStaticData>(AssetPath.Projectile) },
             };
         }
 
-        public ProjectileWeapon CreateProjectileWeapon(GunType gunType)
+        public ProjectileWeapon CreateProjectileWeapon(BulletType bulletType)
         {
             GetStats(out var pool, out _, AssetPath.Projectile);
-            var weapon = new ProjectileWeapon(pool, gunType);
+            var weapon = new ProjectileWeapon(pool, bulletType);
             
             return weapon;
         }
 
-        public LaserWeapon CreateLaserWeapon(GunType gunType)
+        public LaserWeapon CreateLaserWeapon(BulletType bulletType)
         {
             GetStats(out var pool, out var weaponData, AssetPath.Laser);
-            var weapon = new LaserWeapon(pool, _updatable, gunType, weaponData.FireCooldown);
+            var weapon = new LaserWeapon(pool, _updatable, bulletType, weaponData.FireCooldown);
             
             EventListenerContainer.Register<IEventListener>(weapon);
         
@@ -60,9 +60,9 @@ namespace Infrastructure.Services.Factories
             EventListenerContainer.Register<IEventListener>(wrapper);
         }
 
-        private T CreateBullet<T>(GunType gunType) where T : Bullet         //TODO: переделать presenter под MVP
+        private T CreateBullet<T>(BulletType bulletType) where T : Bullet  //TODO: переделать presenter под MVP
         {
-            var bulletData = _factories[gunType];
+            var bulletData = _factories[bulletType];
 
             var bulletPrefab = Object.Instantiate(bulletData.Prefab);
             bulletPrefab.SetActive(false);
@@ -73,7 +73,8 @@ namespace Infrastructure.Services.Factories
             var bulletPresenter = new ProjectilePresenter(bullet, bulletView, _updatable);
 
             EventListenerContainer.Register<IEventListener>(bullet);
-            TransformableContainer.RegisterObject(bullet.Prefab.GetComponent<CollisionChecker>(), bullet);
+            TransformableContainer.RegisterObject(bullet.Prefab.GetComponent<CollisionChecker>(), bullet, 
+                (CollisionType)bulletType);
 
             return bullet as T;
         }

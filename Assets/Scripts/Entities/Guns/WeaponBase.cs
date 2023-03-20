@@ -7,18 +7,18 @@ namespace Entities.Guns
     public abstract class WeaponBase<T> : IWeapon<T> where T : Bullet
     {
         private readonly ObjectPool<T> _objectPool;
-        private readonly GunType _gunType;
+        private readonly BulletType _bulletType;
         public event Action<T> Fired;
         
-        protected WeaponBase(ObjectPool<T> objectPool, GunType gunType)
+        protected WeaponBase(ObjectPool<T> objectPool, BulletType bulletType)
         {
             _objectPool = objectPool;
-            _gunType = gunType;
+            _bulletType = bulletType;
         }
 
         public virtual void Shoot(Vector3 position, Quaternion angle)
         {
-            var bullet = _objectPool.GetObject(_gunType);
+            var bullet = _objectPool.GetObject(_bulletType);
                 
             bullet.Prefab.transform.position = position;
             bullet.Prefab.transform.eulerAngles = angle.eulerAngles;

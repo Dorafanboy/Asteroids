@@ -4,7 +4,7 @@ namespace Entities.Guns
 {
     public class ProjectileWeapon : WeaponBase<Bullet>
     {
-        public ProjectileWeapon(ObjectPool<Bullet> objectPool, GunType gunType) : base(objectPool, gunType)
+        public ProjectileWeapon(ObjectPool<Bullet> objectPool, BulletType bulletType) : base(objectPool, bulletType)
         {
         }
     }

@@ -23,8 +23,8 @@ namespace Infrastructure.States
 
         public void Enter() // сделать дженерик enter'a принимающий гантайп
         {
-            var firstWeapon = _weaponFactory.CreateProjectileWeapon(GunType.Projectile);
-            var secondWeapon = _weaponFactory.CreateLaserWeapon(GunType.Laser); 
+            var firstWeapon = _weaponFactory.CreateProjectileWeapon(BulletType.Projectile);
+            var secondWeapon = _weaponFactory.CreateLaserWeapon(BulletType.Laser); 
             var ship = SpawnShip(firstWeapon, secondWeapon); //WTF
             var enemySpawner = _spawnerFactory.CreateEnemySpawner(ship.Prefab.transform);
 
@@ -35,7 +35,8 @@ namespace Infrastructure.States
         {
         }
 
-        private ShipModel SpawnShip<T, TT>(T firstWeapon, TT secondWeapon) where T : WeaponBase<Bullet> where TT : WeaponBase<Bullet>
+        private ShipModel SpawnShip<T, TT>(T firstWeapon, TT secondWeapon) where T 
+            : WeaponBase<Bullet> where TT : WeaponBase<Bullet>
         {
             return _shipFactory.CreateShip(firstWeapon, secondWeapon);
         }

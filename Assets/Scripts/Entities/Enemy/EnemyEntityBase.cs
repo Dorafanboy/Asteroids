@@ -1,6 +1,7 @@
 ﻿using System;
 using Entities.Guns;
 using Infrastructure;
+using Infrastructure.Services.Clashes;
 using UnityEngine;
 
 namespace Entities.Enemy
@@ -44,4 +45,3 @@ namespace Entities.Enemy
         public abstract void OnUpdated(float time);
     }
 }
-//TODO Сделать обработку коллизий

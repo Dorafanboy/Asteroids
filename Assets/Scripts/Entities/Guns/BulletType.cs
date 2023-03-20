@@ -1,6 +1,6 @@
 ﻿namespace Entities.Guns
 {
-    public enum GunType
+    public enum BulletType
     {
         Projectile = 0,
         Laser = 1

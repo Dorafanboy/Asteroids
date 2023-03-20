@@ -1,4 +1,5 @@
-﻿using Entities.Guns;
+﻿using System;
+using Entities.Guns;
 using Infrastructure;
 using UnityEngine;
 
@@ -8,6 +9,8 @@ namespace Entities.Ship
     {
         private readonly ShipModel _shipModel;
         private readonly ShipView _view;
+
+        public event Action<ShipPresenter> Collided; 
 
         public ShipPresenter(ShipModel shipModel, ShipView view)
         {
@@ -22,6 +25,8 @@ namespace Entities.Ship
             
             _shipModel.InputService.FirstWeaponFired += OnFirstWeaponFired;
             _shipModel.InputService.SecondWeaponFired += OnSecondWeaponFired;
+            
+            _view.Collided += OnCollided;
         }
 
         public void Disable()
@@ -31,6 +36,13 @@ namespace Entities.Ship
             
             _shipModel.InputService.FirstWeaponFired -= OnFirstWeaponFired;
             _shipModel.InputService.SecondWeaponFired -= OnSecondWeaponFired;
+            
+            _view.Collided -= OnCollided;
+        }
+
+        private void OnCollided(ITransformable obj)
+        {
+            Collided?.Invoke(this);
         }
 
         private void OnRotateKeyDowned(float direction, float time)    

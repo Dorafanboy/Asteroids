@@ -26,8 +26,8 @@ namespace Infrastructure.Wrapper
 
         public override void Disable()
         {
-            _objectPool.Received -= OnReceived;
             base.Disable();
+            _objectPool.Received -= OnReceived;
         }
 
         public override void OnUpdated(float time)
