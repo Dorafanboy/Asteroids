@@ -49,12 +49,12 @@ namespace Infrastructure.Services.Factories
             return weapon;
         }
 
-        private void GetStats(out ObjectPool<Bullet> pool, out BulletStaticData weaponData, string path)
+        private void GetStats(out BulletObjectPool<Bullet> pool, out BulletStaticData weaponData, string path)
         {
             var poolData = AssetProvider.GetData<PoolStaticData>(AssetPath.PoolPath);
             weaponData = AssetProvider.GetData<BulletStaticData>(path);
         
-            pool = new ObjectPool<Bullet>(poolData.PoolSize, CreateBullet<Bullet>);           
+            pool = new BulletObjectPool<Bullet>(poolData.PoolSize, CreateBullet<Bullet>);           
             var wrapper = new BulletScreenWrapper<Bullet>(_updatable, _camera, pool);
             
             EventListenerContainer.Register<IEventListener>(wrapper);
@@ -67,16 +67,30 @@ namespace Infrastructure.Services.Factories
             var bulletPrefab = Object.Instantiate(bulletData.Prefab);
             bulletPrefab.SetActive(false);
 
-            var bullet = new Bullet(bulletData.Deceleration, _updatable, bulletPrefab);
+            var bullet = new Bullet(bulletData.Deceleration, _updatable, bulletPrefab, (CollisionType)bulletType);
             
             var bulletView = new ProjectileView();
             var bulletPresenter = new ProjectilePresenter(bullet, bulletView, _updatable);
 
             EventListenerContainer.Register<IEventListener>(bullet);
-            TransformableContainer.RegisterObject(bullet.Prefab.GetComponent<CollisionChecker>(), bullet, 
-                (CollisionType)bulletType);
+            
+            TransformableContainer.RegisterObject(bullet.Prefab.GetComponent<CollisionChecker>());
 
             return bullet as T;
         }
+    }
+}
+
+public struct BulletDataType
+{
+    public BulletType BulletType { get; }
+    public BulletStaticData StaticData { get; }
+    public CollisionType CollisionType { get; }
+
+    public BulletDataType(BulletType bulletType, BulletStaticData staticData, CollisionType collisionType)
+    {
+        BulletType = bulletType;
+        StaticData = staticData;
+        CollisionType = collisionType;
     }
 }

@@ -3,11 +3,11 @@ using Entities.Guns;
 
 namespace Entities.Pool
 {
-    public class ObjectPool<T> : PoolBase<BulletType, T> where T : ITransformable
+    public class BulletObjectPool<T> : PoolBase<BulletType, T> where T : ITransformable
     {
         public event Action<T> Received;
         
-        public ObjectPool(int poolSize, params Func<BulletType, T>[] createObject) : base(poolSize, createObject)
+        public BulletObjectPool(int poolSize, params Func<BulletType, T>[] createObject) : base(poolSize, createObject)
         {
         }
         

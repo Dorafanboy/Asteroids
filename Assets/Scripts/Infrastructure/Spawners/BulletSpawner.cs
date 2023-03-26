@@ -5,9 +5,9 @@ namespace Infrastructure.Spawners
 {
     public class BulletSpawner : ISpawner
     {
-        private readonly ObjectPool<Bullet> _pool;
+        private readonly BulletObjectPool<Bullet> _pool;
 
-        public BulletSpawner(ObjectPool<Bullet> pool)
+        public BulletSpawner(BulletObjectPool<Bullet> pool)
         {
             _pool = pool;
         }

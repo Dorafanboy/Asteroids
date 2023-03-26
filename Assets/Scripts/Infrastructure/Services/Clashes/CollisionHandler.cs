@@ -1,87 +1,79 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Constants;
-using Entities.Guns;
-using Entities.Pool;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Infrastructure.Services.Clashes
 {
     public class CollisionHandler : IEventListener
     {
-        private readonly List<CollisionActors> _collisionActors;
+        private readonly List<CollisionChecker>  _collisionActors;
         private readonly TransformableContainer _transformableContainer;
-       // private readonly PoolBase<ITransformable> _poolBase;
 
+        public event Action<CollisionChecker, bool> UfoDestroyedByLaser;
+        
         public CollisionHandler(TransformableContainer transformableContainer)
         {
-            _collisionActors = new List<CollisionActors>();
-            _collisionActors = (List<CollisionActors>)transformableContainer.Listeners;
+            _collisionActors = new List<CollisionChecker>();
+            _collisionActors = (List<CollisionChecker>)transformableContainer.Listeners;
             _transformableContainer = transformableContainer;
         }
-        
+
         public void Enable()
         {
             _transformableContainer.Registered += OnRegistered;
-                
+
             for (int i = 0; i < _collisionActors.Count; i++)
             {
-                _collisionActors[i].CollisionChecker.Collided += OnCollided;
-            } 
+                _collisionActors[i].Collided += OnCollided;
+            }
         }
 
         public void Disable()
         {
             _transformableContainer.Registered -= OnRegistered;
-            
+
             for (int i = 0; i < _collisionActors.Count; i++)
             {
-                _collisionActors[i].CollisionChecker.Collided -= OnCollided;
-            } 
+                _collisionActors[i].Collided -= OnCollided;
+            }
         }
 
-        private void OnRegistered(CollisionActors actors)
+        private void OnRegistered(CollisionChecker checker)
         {
-            _collisionActors.Add(actors);
-            actors.CollisionChecker.Collided += OnCollided;
+            _collisionActors.Add(checker);
+            checker.Collided += OnCollided;
         }
 
-        private void OnCollided(CollisionChecker arg1, GameObject arg2)
+        private void OnCollided(CollisionChecker arg1, CollisionChecker arg2)
         {
-            if (arg1.transform.CompareTag(Tags.Enemy) && arg2.CompareTag(Tags.Bullet))
+            switch (arg1.CollisionType)
             {
-                var transformable = _collisionActors
-                    .Select(col => col)
-                    .First(t => t.Transformable.Prefab == arg1.gameObject);
-
-                var spaceId = _collisionActors.IndexOf(transformable);
-                
-                var space = _collisionActors[spaceId].CollisionType;
-                Debug.Log(space);
-
-                transformable.Transformable.DisableObject();
-                arg2.gameObject.SetActive(false);
-
-                _collisionActors.Add(new CollisionActors(arg1, transformable.Transformable, space));
-                return;
+                case CollisionType.Projectile when IsEnemyShip(arg2):
+                    DisableCollidedObjects(arg1, arg2);
+                    UfoDestroyedByLaser?.Invoke(arg2, true);
+                    return;
+                case CollisionType.Laser when IsEnemyShip(arg2):
+                    DisableCollidedObjects(arg1, arg2);
+                    UfoDestroyedByLaser?.Invoke(arg2, false);
+                    return;
             }
-            //при столкновении с астероидом остылать евент спавнеру тот возрващает объект в пул и достает 2 меньших размера
-
-            if (arg1.transform.CompareTag(Tags.Enemy) && arg2.CompareTag(Tags.Player))
+            
+            if (IsEnemyShip(arg1) && arg2.CollisionType == CollisionType.Player)
             {
-                var transformable = _collisionActors
-                    .Select(col => col)
-                    .First(t => t.Transformable.Prefab == arg2.gameObject);
-                
-                var spaceId = _collisionActors.IndexOf(transformable);
-                var space = _collisionActors[spaceId].CollisionType;
-                Debug.Log(space);
- 
-                transformable.Transformable.DisableObject();
-                
-                _collisionActors.Add(new CollisionActors(arg1, transformable.Transformable, space));
-                arg1.gameObject.SetActive(false);
+                DisableCollidedObjects(arg1, arg2);
+                UfoDestroyedByLaser?.Invoke(arg1, false);
             }
+        }
+
+        private void DisableCollidedObjects(CollisionChecker arg1, CollisionChecker arg2)
+        {
+            arg1.gameObject.SetActive(false);
+            arg2.gameObject.SetActive(false);
+        }
+
+        private bool IsEnemyShip(CollisionChecker arg2)
+        {
+            return arg2.CollisionType == CollisionType.Asteroid || arg2.CollisionType == CollisionType.Ufo;
         }
     }
 }

@@ -10,13 +10,15 @@ namespace Entities.Guns
         private readonly float _deceleration;
         private readonly IUpdatable _updatable;
         public GameObject Prefab { get; }
+        public CollisionType CollisionType { get; }
         public event Action<ITransformable> Collided;
 
-        public Bullet(float deceleration, IUpdatable updatable, GameObject prefab)
+        public Bullet(float deceleration, IUpdatable updatable, GameObject prefab, CollisionType collisionType)
         {
             _deceleration = deceleration;
             _updatable = updatable;
-            Prefab = prefab; 
+            Prefab = prefab;
+            CollisionType = collisionType;
         }
 
         public void Enable()

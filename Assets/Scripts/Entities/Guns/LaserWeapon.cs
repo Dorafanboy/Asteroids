@@ -11,8 +11,8 @@ namespace Entities.Guns
         private float _currentWait;
         private int _remainingShots;
     
-        public LaserWeapon(ObjectPool<Bullet> objectPool, IUpdatable updatable, BulletType bulletType, float bulletCooldown) 
-            : base(objectPool, bulletType)
+        public LaserWeapon(BulletObjectPool<Bullet> bulletObjectPool, IUpdatable updatable, BulletType bulletType, float bulletCooldown) 
+            : base(bulletObjectPool, bulletType)
         {
             _updatable = updatable; 
             _bulletCooldown = bulletCooldown;

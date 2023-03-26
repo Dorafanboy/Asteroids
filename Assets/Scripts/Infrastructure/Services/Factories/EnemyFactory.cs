@@ -25,9 +25,9 @@ namespace Infrastructure.Services.Factories
         public Ufo CreateUfo(Transform playerShip)
         {
             var ufoPrefab = GetEnemyPrefab(out var data, AssetPath.Ufo);
-            var ufo = new Ufo(ufoPrefab, data.Speed, playerShip, _updatable);
+            var ufo = new Ufo(ufoPrefab, data.Speed, _updatable, CollisionType.Ufo, playerShip);
 
-            InvokeAction(ufo, CollisionType.Ufo);
+            InvokeAction(ufo);
 
             return ufo;
         }
@@ -35,9 +35,9 @@ namespace Infrastructure.Services.Factories
         public Asteroid CreateAsteroid(Transform playerShip) //TODO: переделать, трудно добавлять новые корабли
         {
             var asteroidPrefab = GetEnemyPrefab(out var data, AssetPath.Asteroid);
-            var asteroid = new Asteroid(asteroidPrefab, data.Speed, _updatable, _camera);
+            var asteroid = new Asteroid(asteroidPrefab, data.Speed, _updatable, CollisionType.Asteroid, _camera);
             
-            InvokeAction(asteroid, CollisionType.Asteroid);
+            InvokeAction(asteroid);
 
             return asteroid;
         }
@@ -51,10 +51,10 @@ namespace Infrastructure.Services.Factories
             return asteroidPrefab;
         }
 
-        private void InvokeAction(EnemyEntityBase enemy, CollisionType type)
+        private void InvokeAction(EnemyEntityBase enemy)
         {
             EventListenerContainer.Register<IEventListener>(enemy);
-            TransformableContainer.RegisterObject(enemy.Prefab.GetComponent<CollisionChecker>(), enemy, type);
+            TransformableContainer.RegisterObject(enemy.Prefab.GetComponent<CollisionChecker>());
         }
     }
 }

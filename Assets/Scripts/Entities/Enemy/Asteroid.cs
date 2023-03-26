@@ -1,4 +1,5 @@
 ﻿using Infrastructure;
+using Infrastructure.Services.Clashes;
 using UnityEngine;
 
 namespace Entities.Enemy
@@ -8,12 +9,12 @@ namespace Entities.Enemy
         private readonly Camera _camera;
         private Vector3 _targetPosition;
 
-        public Asteroid(GameObject prefab, float speed, IUpdatable updatable, Camera camera) : base(prefab, speed,
-            updatable)
+        public Asteroid(GameObject prefab, float speed, IUpdatable updatable, CollisionType collisionType, Camera camera) 
+            : base(prefab, speed, updatable, collisionType)
         {
             _camera = camera;
         }
-        
+
         public override void OnUpdated(float time)
         {
             var nextPosition = Vector3.MoveTowards(Prefab.gameObject.transform.position,

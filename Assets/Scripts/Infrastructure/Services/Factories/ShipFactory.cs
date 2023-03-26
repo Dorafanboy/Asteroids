@@ -1,4 +1,5 @@
 ﻿using Constants;
+using Entities.Enemy;
 using Entities.Guns;
 using Entities.Ship;
 using Infrastructure.Services.Assets;
@@ -32,20 +33,17 @@ namespace Infrastructure.Services.Factories
             var shipData = AssetProvider.GetData<ShipStaticData>(AssetPath.ShipPath);
             var shipPrefab = Object.Instantiate(shipData.Prefab, Vector3.zero, Quaternion.identity);
 
-            var ship = new ShipModel(shipData.Acceleration, shipData.Deceleration, shipData.MaxSpeed, shipData.RotationSpeed,
-                shipPrefab, _inputService, firstWeapon, secondWeapon);
+            var ship = new ShipModel(shipData.Acceleration, shipData.Deceleration, shipData.MaxSpeed, 
+                shipData.RotationSpeed, shipPrefab, _inputService, firstWeapon, secondWeapon, CollisionType.Player);
 
             var shipView = new ShipView(ship);
             var shipPresenter = new ShipPresenter(ship, shipView);
             var wrapper = new ScreenWrapper(_updatable, _camera, shipView);
-            var collision = new CollisionHandler(TransformableContainer);
-            
+
             EventListenerContainer.Register<IEventListener>(shipPresenter);
             EventListenerContainer.Register<IEventListener>(wrapper);
-            EventListenerContainer.Register<IEventListener>(collision);
             
-            TransformableContainer.RegisterObject(shipView.Prefab.GetComponent<CollisionChecker>(), shipView, 
-                CollisionType.Player);
+            TransformableContainer.RegisterObject(shipView.Prefab.GetComponent<CollisionChecker>());
 
             return ship;
         }

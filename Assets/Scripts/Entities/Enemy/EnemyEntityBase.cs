@@ -10,14 +10,17 @@ namespace Entities.Enemy
     {
         public GameObject Prefab { get; }
         protected float Speed { get; }
-
         private readonly IUpdatable _updatable;
+        public CollisionType CollisionType { get; }
 
-        protected EnemyEntityBase(GameObject prefab, float speed, IUpdatable updatable)
+        public event Action<ITransformable> Collided;
+
+        protected EnemyEntityBase(GameObject prefab, float speed, IUpdatable updatable, CollisionType collisionType)
         {
             Prefab = prefab;
             Speed = speed;
             _updatable = updatable;
+            CollisionType = collisionType;
         }
 
         public void Enable()
@@ -34,8 +37,6 @@ namespace Entities.Enemy
         {
             Collided?.Invoke(this);
         }
-
-        public event Action<ITransformable> Collided;
 
         public void InstallPosition(Vector3 position)
         {

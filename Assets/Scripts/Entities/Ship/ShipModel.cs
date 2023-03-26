@@ -1,4 +1,5 @@
 ﻿using Entities.Guns;
+using Infrastructure.Services.Clashes;
 using Infrastructure.Services.Inputs;
 using UnityEngine;
 
@@ -15,9 +16,11 @@ namespace Entities.Ship
         public float CurrentSpeed { get; set; }
         public WeaponBase<Bullet> FirstWeapon { get; }
         public WeaponBase<Bullet> SecondWeapon { get; }
+        public CollisionType CollisionType { get; }
 
         public ShipModel(float acceleration, float deceleration, float maxSpeed, float rotationSpeed, GameObject prefab, 
-            IInputService inputService, WeaponBase<Bullet> firstWeapon, WeaponBase<Bullet> secondWeapon)
+            IInputService inputService, WeaponBase<Bullet> firstWeapon, WeaponBase<Bullet> secondWeapon, 
+            CollisionType collisionType)
         {
             Acceleration = acceleration;
             Deceleration = deceleration;
@@ -27,6 +30,7 @@ namespace Entities.Ship
             InputService = inputService;
             FirstWeapon = firstWeapon;
             SecondWeapon = secondWeapon;
+            CollisionType = collisionType;
         }
     }
 }

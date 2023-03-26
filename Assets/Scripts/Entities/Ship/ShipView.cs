@@ -9,10 +9,12 @@ namespace Entities.Ship
     {
         private readonly ShipModel _shipModel; //TODO: избавиться от модели отсюда, сделать install angle from presenter
         public GameObject Prefab { get; }
+        public CollisionType CollisionType { get; }
 
         public ShipView(ShipModel shipModel)
         {
             _shipModel = shipModel;
+            CollisionType = _shipModel.CollisionType;
             Prefab = _shipModel.Prefab;
         }
 
@@ -28,6 +30,7 @@ namespace Entities.Ship
         }
 
         public event Action<ITransformable> Collided;
+
 
         public void InstallAngleRotation(float angle)
         {

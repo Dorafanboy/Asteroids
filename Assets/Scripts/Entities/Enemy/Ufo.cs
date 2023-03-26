@@ -1,4 +1,5 @@
 ﻿using Infrastructure;
+using Infrastructure.Services.Clashes;
 using UnityEngine;
 
 namespace Entities.Enemy
@@ -7,7 +8,9 @@ namespace Entities.Enemy
     {
         private readonly Transform _playerShip;
 
-        public Ufo(GameObject prefab, float speed, Transform playerShip, IUpdatable updatable) : base(prefab, speed, updatable)
+        public Ufo(GameObject prefab, float speed, IUpdatable updatable, CollisionType collisionType,
+            Transform playerShip) 
+            : base(prefab, speed, updatable, collisionType)
         {
             _playerShip = playerShip;
         }

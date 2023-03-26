@@ -28,24 +28,24 @@ namespace Infrastructure.Services.Containers
 
 public class TransformableContainer : IContainer<CollisionChecker>
 {
-    private readonly List<CollisionActors> _listeners;
-    public IReadOnlyList<CollisionActors> Listeners => _listeners;
-    public event Action<CollisionActors> Registered;
+    private readonly List<CollisionChecker> _listeners;
+    public IReadOnlyList<CollisionChecker> Listeners => _listeners;
+    public event Action<CollisionChecker> Registered;
 
     public TransformableContainer()
     {
-        _listeners = new List<CollisionActors>();
+        _listeners = new List<CollisionChecker>();
     }
 
     public void Register<TService>(TService service) where TService : IService
     {
     }
     
-    public void RegisterObject(CollisionChecker checker, ITransformable transformable, CollisionType type)
+    public void RegisterObject(CollisionChecker checker)
     {
-        _listeners.Add(new CollisionActors(checker, transformable, type));
+        _listeners.Add(checker);
         
-        Registered?.Invoke(new CollisionActors(checker, transformable, type));
+        Registered?.Invoke(checker);
     }
 }
 

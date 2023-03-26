@@ -1,6 +1,7 @@
 ﻿using System;
 using Entities.Enemy;
 using Entities.Pool;
+using Infrastructure.Services.Clashes;
 using Infrastructure.Spawners.SpawnPoints;
 using StaticData.Settings;
 using UnityEngine;
@@ -16,13 +17,15 @@ namespace Infrastructure.Spawners
         private readonly EnemySpawnerSettings _settings;
         private readonly IUpdatable _updatable;
         private readonly SpawnPointsContainer _spawnPointsContainer;
+        private readonly EnemyCollisionHandler<EnemyEntityBase> _collisionHandler;
 
         private float _elapsedTime;
 
         public EnemySpawner(Transform playerTransform, EnemySpawnerSettings settings, SpawnPointsContainer spawnPoints, 
-            IUpdatable updatable, Camera camera, params Func<Transform, EnemyEntityBase>[] createObject)
+            IUpdatable updatable, Camera camera, CollisionHandler handler, params Func<Transform, EnemyEntityBase>[] createObject)
         {
             _pool = new EnemyObjectPool<EnemyEntityBase>(settings.EnemyCount, createObject);
+            _collisionHandler = new EnemyCollisionHandler<EnemyEntityBase>(_pool, handler);
             _playerTransform = playerTransform;
             _settings = settings;
             _updatable = updatable;
@@ -33,11 +36,13 @@ namespace Infrastructure.Spawners
         public void Enable()
         {
             _updatable.Updated += OnUpdated;
+            _collisionHandler.AsteroidDestroyedByProjectile += OnAsteroidDestroyedByProjectile;
         }
 
         public void Disable()
         {
             _updatable.Updated -= OnUpdated;
+            _collisionHandler.AsteroidDestroyedByProjectile -= OnAsteroidDestroyedByProjectile;
         }
 
         public void OnUpdated(float time)
@@ -47,7 +52,18 @@ namespace Infrastructure.Spawners
             {
                 Spawn();
                 _elapsedTime = _settings.SpawnDelay;
-            }
+            } 
+        }
+
+        private void OnAsteroidDestroyedByProjectile(EnemyEntityBase trans)
+        {
+            trans.Prefab.transform.localScale = new Vector3(1.5f, 1.5f, 0f);
+            trans.Prefab.SetActive(true);
+         
+            var spawnedObject = _pool.GetObjectByPrefab(trans.CollisionType, _playerTransform);
+            spawnedObject.Prefab.transform.position = trans.Prefab.transform.position;
+            spawnedObject.Prefab.gameObject.SetActive(true);
+            spawnedObject.Prefab.transform.localScale = new Vector3(1.5f, 1.5f, 0f);
         }
 
         private void Spawn()
@@ -57,6 +73,7 @@ namespace Infrastructure.Spawners
             
             var spawnedObject = _pool.GetObject(_playerTransform);
             spawnedObject.Prefab.transform.position = trans;
+            spawnedObject.Prefab.transform.localScale = new Vector3(2f, 2f, 0f);
             spawnedObject.Prefab.gameObject.SetActive(true);
         }
 

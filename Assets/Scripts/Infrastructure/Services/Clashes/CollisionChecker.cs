@@ -3,13 +3,18 @@ using UnityEngine;
 
 namespace Infrastructure.Services.Clashes
 {
-    public class CollisionChecker : MonoBehaviour, IService
+    public class CollisionChecker : MonoBehaviour, IService, ICollideable
     {
-        public event Action<CollisionChecker, GameObject> Collided;
+        [SerializeField] private CollisionType _collisionType;
+        public CollisionType CollisionType => _collisionType;
+        public event Action<CollisionChecker, CollisionChecker> Collided;
         
         private void OnCollisionEnter2D(Collision2D col)
         {
-            Collided?.Invoke(this, col.gameObject);
+            if (col.gameObject.TryGetComponent(out CollisionChecker checker))
+            {
+                Collided?.Invoke(this, checker);
+            }
         }
     }
 }

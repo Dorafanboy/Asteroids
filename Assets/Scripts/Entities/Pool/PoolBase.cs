@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Entities.Guns;
+using Infrastructure.Services.Clashes;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -10,7 +12,7 @@ namespace Entities.Pool
     {
         private readonly int _poolSize;
         private readonly Func<TT, T>[] _createObject;
-        private readonly Queue<T> _pool;
+        private Queue<T> _pool;
 
         protected PoolBase(int poolSize, params Func<TT, T>[] createObject)
         {
@@ -20,6 +22,32 @@ namespace Entities.Pool
         }
 
         public virtual T GetObject(TT type)
+        {
+            FillPool(type);
+            var element = _pool.Dequeue();
+
+            return element;
+        }
+        
+        public T GetObjectByPrefab(CollisionType collisionType, TT type)
+        {
+            FillPool(type);
+            var element = _pool
+                .FirstOrDefault(e => e.CollisionType == collisionType);
+            
+            _pool = new Queue<T>(_pool
+                .Where(ex => element != null && ex.CollisionType != element.CollisionType));
+
+            return element;
+        }
+
+        public void ReturnObject(T obj)
+        {
+            _pool.Enqueue(obj);
+            obj.Prefab.SetActive(false);
+        }
+
+        private void FillPool(TT type)
         {
             if (_pool.Count <= 0)
             {
@@ -31,23 +59,6 @@ namespace Entities.Pool
                     _pool.Enqueue(randomFunc(type));
                 }
             }
-
-            var element = _pool.Dequeue();
-            element.Collided += OnCollided;
-
-            return element;
-        }
-
-        public void ReturnObject(T obj)
-        {
-            obj.Collided -= OnCollided;
-            _pool.Enqueue(obj);
-        }
-
-        private void OnCollided(ITransformable obj)
-        {
-            obj.Prefab.SetActive(false);
-            ReturnObject((T)obj);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Constants;
 using Infrastructure.Loaders;
 using Infrastructure.Services.Assets;
+using Infrastructure.Services.Clashes;
 using Infrastructure.Services.Containers;
 using Infrastructure.Services.Factories;
 using Infrastructure.Services.Inputs;
@@ -59,7 +60,7 @@ namespace Infrastructure.States
             
             _diContainer.Register(new SpawnerFactory(_diContainer.GetService<IAssetProvider>(),
                 _eventListenerContainer, _updatable, _diContainer.GetService<EnemyFactory>(), _camera, 
-                _transformableContainer));
+                _transformableContainer, new CollisionHandler(_transformableContainer)));
             
             _diContainer.Register(new ShipFactory(_diContainer.GetService<IAssetProvider>(),
                 _eventListenerContainer, _diContainer.GetService<IInputService>(), _updatable, _camera, 
