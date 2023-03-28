@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Entities.Enemy;
 using Entities.Guns;
 using Entities.Pool;
 using Infrastructure;
@@ -32,7 +31,7 @@ public class EnemyCollisionHandler<T> : IEventListener where T : ITransformable
 {
     private readonly EnemyObjectPool<T> _enemyPool;
     private readonly CollisionHandler _collisionHandler;
-    private readonly List<T> _enemies;
+    private readonly Dictionary<CollisionChecker, T> _enemies;
 
     public event Action<T> AsteroidDestroyedByProjectile;
 
@@ -40,7 +39,7 @@ public class EnemyCollisionHandler<T> : IEventListener where T : ITransformable
     {
         _enemyPool = enemyPool;
         _collisionHandler = collisionHandler;
-        _enemies = new List<T>();
+        _enemies = new Dictionary<CollisionChecker, T>();
 
         Enable();
     }
@@ -59,22 +58,25 @@ public class EnemyCollisionHandler<T> : IEventListener where T : ITransformable
 
     private void OnReceived(T obj)
     {
-        _enemies.Add(obj);
+        var checker = obj.Prefab.GetComponent<CollisionChecker>();
+        _enemies.Add(checker, obj);
     }
 
     private void OnUfoDestroyedByLaser(CollisionChecker obj, bool diedFromProjectile)
     {
-        var gameObj = obj.gameObject;
-
-        var trans = _enemies
-            .FirstOrDefault(t => t.Prefab == gameObj);
-
+        if (_enemies.ContainsKey(obj) == false)
+        {
+            return;
+        }
+        
+        var trans = _enemies[obj];
+        
         if (diedFromProjectile && obj.CollisionType == CollisionType.Asteroid)
         {
             AsteroidDestroyedByProjectile?.Invoke(trans);
+            _enemyPool.ReturnObject(trans);
         }
-        
-       // _enemyPool.ReturnObject(trans);
-        _enemies.Remove(trans);
+
+        _enemies.Remove(obj);
     }
 }

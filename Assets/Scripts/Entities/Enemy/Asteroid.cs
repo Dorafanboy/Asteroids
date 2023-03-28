@@ -1,4 +1,5 @@
-﻿using Infrastructure;
+﻿using System.Collections.Generic;
+using Infrastructure;
 using Infrastructure.Services.Clashes;
 using UnityEngine;
 
@@ -7,12 +8,16 @@ namespace Entities.Enemy
     public class Asteroid : EnemyEntityBase
     {
         private readonly Camera _camera;
+        private readonly List<Asteroid> _asteroids;
         private Vector3 _targetPosition;
+        public bool IsSmall { get; private set; }
 
-        public Asteroid(GameObject prefab, float speed, IUpdatable updatable, CollisionType collisionType, Camera camera) 
-            : base(prefab, speed, updatable, collisionType)
+        public Asteroid(GameObject prefab, float speed, IUpdatable updatable, CollisionType collisionType, Camera camera, 
+            bool isSmall) : base(prefab, speed, updatable, collisionType)
         {
             _camera = camera;
+            IsSmall = isSmall;
+            _asteroids = new List<Asteroid>();
         }
 
         public override void OnUpdated(float time)
@@ -25,6 +30,16 @@ namespace Entities.Enemy
             {
                 _targetPosition = GetWorldPoint();
             }
+        }
+
+        public void Add(Asteroid miniAsteroid)
+        {
+            _asteroids.Add(miniAsteroid);
+        }
+
+        public List<Asteroid> GetAsteroids()
+        {
+            return _asteroids;
         }
 
         private Vector3 GetWorldPoint()

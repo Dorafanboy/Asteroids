@@ -57,13 +57,20 @@ namespace Infrastructure.Spawners
 
         private void OnAsteroidDestroyedByProjectile(EnemyEntityBase trans)
         {
-            trans.Prefab.transform.localScale = new Vector3(1.5f, 1.5f, 0f);
-            trans.Prefab.SetActive(true);
-         
-            var spawnedObject = _pool.GetObjectByPrefab(trans.CollisionType, _playerTransform);
-            spawnedObject.Prefab.transform.position = trans.Prefab.transform.position;
-            spawnedObject.Prefab.gameObject.SetActive(true);
-            spawnedObject.Prefab.transform.localScale = new Vector3(1.5f, 1.5f, 0f);
+            var asteroid = (Asteroid)trans;
+            if (asteroid.IsSmall)
+            {
+                return;
+            }
+            
+            var asteroids = asteroid.GetAsteroids();
+            
+            for (int i = 0; i < asteroids.Count; i++)
+            {
+                var spawnedObject = asteroids[i];
+                spawnedObject.Prefab.transform.position = trans.Prefab.transform.position;
+                spawnedObject.Prefab.gameObject.SetActive(true);
+            }
         }
 
         private void Spawn()
